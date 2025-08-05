@@ -1,0 +1,97 @@
+# Plan for Spiritual Planner
+
+## Notes
+- The canonical planner file is now `/Users/prafultickoo/Desktop/Spiritual/plan.md`. All future planning updates must occur in this file, located in the current working folder, not in any previous or other location.
+- The planner should always be in the current working folder.
+- The first step is to read and load the documents as per the user's request.
+- User requests an agentic approach: one agent to create chunks, another to verify chunk quality.
+- Documents contain Sanskrit/English verses; verses must be preserved for accurate querying.
+- Project structure and initial document loading utilities have been set up.
+- Agent definitions, task YAMLs, and prompt templates for chunking and verification agents have been created.
+- Main CrewAI workflow and requirements.txt have been created.
+- Output directory created for processed chunks.
+- Template .env file for API keys and vector DB settings added.
+- Test script for agentic document loading and chunking created; dependencies installed.
+- explanation.md file requested to document all steps completed so far.
+- User requires GPT 4.1 (not GPT 4o) for agent LLMs, with temperature 0 and max tokens 8096.
+- Utilities for reading, loading, and chunking documents should use Langchain and be implemented as agent tools.
+- New requirement: Add agent tools for PDF rotation/orientation detection and correction, including OCR fallback for problematic PDFs. These tools should be exposed to the agentic architecture without deviating from Langchain/CrewAI integration.
+- The ChromaDB vector database folder does not exist yet; the actual vectorization and storage process must be executed and verified before proceeding to frontend work.
+- Direct vectorization script created and now running to process and store document embeddings in ChromaDB. Awaiting completion and verification before proceeding.
+- Vectorization process failed due to OpenAI API 'max_tokens_per_request' error; need to fix batching to stay within token limits before proceeding.
+- Vectorization batching logic fixed in vectorization utility; ready to re-run vectorization and verify DB persistence
+- Vectorization failed again: ChromaDB requires all metadata values to be str, int, float, or bool. The current chunk metadata contains a list (e.g., 'verses'), which must be filtered or converted before storage.
+- Metadata and batching issues fixed; vectorization and ChromaDB creation now running smoothly.
+- Vectorization and ChromaDB creation completed successfully; 25,808 chunks vectorized and stored. Ready for agentic verification of the vector store.
+- Verification agent, verification tasks YAML, and verification utility functions created using CrewAI framework to test vector store integrity, similarity search, metadata, and retrieval.
+- Fixed CrewAI tool import issue in verification utilities; ready to re-run verification agent.
+- Ran direct verification script: vector store integrity PASSED (25,808 docs), but all similarity search, metadata validation, and document retrieval queries FAILED (no documents found). Indicates a critical retrieval/query issue despite successful storage.
+- Diagnostic script revealed root cause: Langchain Chroma vector store must be initialized with the correct collection name ('spiritual_texts'). Retrieval works when this is done. All scripts must be updated accordingly.
+- Vector store retrieval now fully fixed and verified: all similarity search, metadata validation, and document retrieval tests pass (100% success). Vector store is ready for production use.
+- Next steps: build document retriever and begin frontend/user interaction.
+- Begin API and frontend build: expose backend Q&A endpoints for all required LLMs, design spiritual UI, and enable user Q&A from frontend.
+- Modern, spiritual frontend (HTML/CSS/JS) created and integrated with backend API for Q&A and document search.
+- Frontend integration complete, with user Q&A flow fully functional.
+- User should be able to choose between diverse (MMR) or similar (similarity search) answers when retrieving results; this choice must be exposed in the frontend and passed to the backend API.
+- User questions are converted into embeddings using the OpenAIEmbeddings class from Langchain, which calls the OpenAI API to generate vector representations of the input text. This embedding is then used to perform a similarity search in the ChromaDB vectorstore to retrieve relevant chunks for answering.
+- The embedding process is handled in `SpiritualDocumentRetriever` by initializing OpenAIEmbeddings and passing the user question directly to the vectorstore's similarity search, ensuring consistent and accurate retrieval.
+- The `diversity` parameter from the frontend is passed to the backend and used as the `lambda_mult` argument in the `max_marginal_relevance_search` method, controlling the tradeoff between diversity and relevance in MMR retrieval.
+- Using similarity search (not MMR) is not identical to MMR with diversity=1; similarity search retrieves the top-k most relevant chunks without considering diversity among results, while MMR always balances relevance and diversity according to the `diversity` (lambda_mult) parameter.
+- Recommended mapping: use pure similarity search for "Deep" style (focused), and MMR with appropriate diversity values for "Balanced" and "Broad" styles, to ensure user expectations match retrieval behavior.
+
+## Task List
+- [x] Read and load the documents using agentic approach
+  - [x] Set up utility functions for document loading
+  - [x] Define agent YAMLs and prompt templates for chunking/verification
+  - [x] Update agent YAMLs to use GPT 4.1, temperature 0, max tokens 8096
+  - [x] Implement agentic chunking and verification logic
+  - [x] Create output directory for processed chunks
+  - [x] Create template .env file for API keys and vector DB
+  - [x] Create test script for agentic document loading/chunking
+  - [x] Install required dependencies
+  - [x] Refactor document reading/loading/chunking utilities to use Langchain and expose as agent tools
+  - [x] Agent 1: Create document chunks (preserve verses)
+  - [x] Agent 2: Verify chunk quality
+- [x] Vectorize the documents
+- [x] Update agent YAMLs and main app to use vectorization agent tools
+- [x] Vectorize and store documents in persistent vector database (run and verify ChromaDB creation)
+  - [x] Fix vectorization batching to avoid API token limit errors and re-run process
+  - [x] Re-run vectorization and verify persistent ChromaDB creation
+  - [x] Fix metadata: filter/convert complex metadata values (e.g., lists) to supported types before storing in ChromaDB
+- [x] Verify vectorization and vector DB using verification agent
+  - [x] Create verification agent YAML (CrewAI)
+  - [x] Create verification tasks YAML
+  - [x] Implement verification utility functions (in utils/verification_utils.py)
+  - [x] Create main verification script (verify_vector_store.py)
+  - [x] Run verification agent and review verification report
+- [x] Create document retriever to retrieve relevant chunks basis user query
+- [x] Store the chunks in vector database (ensure persistence)
+- [x] Vector database should be persistent
+- [x] Convert user question into embeddings
+- [x] Write a detailed prompt, point by point which instructs LLMs to answer user query
+- [x] Create a detailed answer from the chunks retrieved that answers users questions
+- [x] Create endpoints for the following LLMs:
+    - GPT 4.1 (default)
+    - o3 mini
+    - Grok 3 mini beta
+    - Deepseek reasoner
+    - Gemini pro 2.5 flash
+    - Claude 3.7 Sonnet thinking
+- [x] Create API for the backend Q&A which front can invoke, and which can be invoked from any other application (eg Postman)
+- [x] Write test scripts in a separate folder to test each functionality
+- [x] Create a sleek, modern looking front end with spiritual feeling
+- [x] User can ask questions via front end
+- [x] Display answer on front end
+- [x] Integrate frontend with backend API for Q&A and document search
+- [x] End-to-end user Q&A flow fully functional
+- [ ] Adapt user personality style and answer accordingly
+- [ ] Store answers in a database
+- [ ] Admin tab displays model parameters and logs
+- [ ] Admin tab allows user to change default model
+- [x] Implement agent tools for PDF rotation/orientation analysis and correction (including OCR fallback), and expose them to CrewAI agents
+- [x] Integrate PDF rotation/orientation agent tools with CrewAI agents
+- [x] Create explanation.md file documenting all completed steps
+- [ ] Allow user to select diverse (MMR) or similar (similarity search) answers in the frontend and propagate this option to the backend API
+
+## Current Goal
+Implement reading style selection, personality adaptation, answer storage, and admin features

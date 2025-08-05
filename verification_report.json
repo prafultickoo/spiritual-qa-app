@@ -1,0 +1,146 @@
+{
+  "timestamp": "/Users/prafultickoo/Desktop/Spiritual",
+  "vector_store_path": "./vector_store",
+  "tests": {
+    "integrity": {
+      "status": "success",
+      "vector_store_path": "./vector_store",
+      "database_files": [
+        "vector_store/144ec1fb-5f6a-4348-8044-539a69ad49b0",
+        "vector_store/83e0a48b-ef41-4b7f-a1e6-8965874dfa3e",
+        "vector_store/chroma.sqlite3"
+      ],
+      "file_sizes": {
+        "vector_store/chroma.sqlite3": 382578688
+      },
+      "collection_info": {
+        "name": "spiritual_texts",
+        "count": 25808,
+        "metadata": null
+      },
+      "document_count": 25808,
+      "errors": []
+    },
+    "similarity_search": {
+      "status": "completed",
+      "total_queries": 8,
+      "test_results": [
+        {
+          "query": "What is the meaning of life?",
+          "results_count": 3,
+          "top_score": 0.33616453409194946,
+          "has_verses": false
+        },
+        {
+          "query": "dharma and righteous living",
+          "results_count": 3,
+          "top_score": 0.21516332030296326,
+          "has_verses": false
+        },
+        {
+          "query": "meditation and self-realization",
+          "results_count": 3,
+          "top_score": 0.2791396677494049,
+          "has_verses": false
+        },
+        {
+          "query": "karma and its effects",
+          "results_count": 3,
+          "top_score": 0.26166272163391113,
+          "has_verses": false
+        },
+        {
+          "query": "moksha liberation",
+          "results_count": 3,
+          "top_score": 0.25907307863235474,
+          "has_verses": false
+        },
+        {
+          "query": "\u0906\u0924\u094d\u092e\u093e \u0914\u0930 \u092a\u0930\u092e\u093e\u0924\u094d\u092e\u093e",
+          "results_count": 3,
+          "top_score": 0.33521103858947754,
+          "has_verses": true
+        },
+        {
+          "query": "yoga and spiritual practice",
+          "results_count": 3,
+          "top_score": 0.30933743715286255,
+          "has_verses": false
+        },
+        {
+          "query": "devotion and surrender",
+          "results_count": 3,
+          "top_score": 0.2976323962211609,
+          "has_verses": false
+        }
+      ],
+      "successful_searches": 8,
+      "errors": []
+    },
+    "metadata_preservation": {
+      "status": "completed",
+      "total_documents_sampled": 20,
+      "metadata_fields": {
+        "source": {
+          "count": 20,
+          "percentage": 100.0
+        },
+        "has_verses": {
+          "count": 20,
+          "percentage": 100.0
+        },
+        "page": {
+          "count": 20,
+          "percentage": 100.0
+        },
+        "chunk_id": {
+          "count": 20,
+          "percentage": 100.0
+        }
+      },
+      "verses_preservation": {
+        "documents_with_verses": 0,
+        "sample_verses": []
+      },
+      "errors": []
+    },
+    "document_retrieval": {
+      "status": "completed",
+      "total_questions": 5,
+      "successful_retrievals": 5,
+      "retrieval_tests": [
+        {
+          "question": "How can I find inner peace?",
+          "documents_retrieved": 3,
+          "best_score": 0.3883063495159149,
+          "content_quality": "good"
+        },
+        {
+          "question": "What is the purpose of meditation?",
+          "documents_retrieved": 3,
+          "best_score": 0.2991041839122772,
+          "content_quality": "good"
+        },
+        {
+          "question": "How do I overcome suffering?",
+          "documents_retrieved": 3,
+          "best_score": 0.33252841234207153,
+          "content_quality": "good"
+        },
+        {
+          "question": "What is the path to enlightenment?",
+          "documents_retrieved": 3,
+          "best_score": 0.2814129590988159,
+          "content_quality": "good"
+        },
+        {
+          "question": "How should I live righteously?",
+          "documents_retrieved": 3,
+          "best_score": 0.3370249569416046,
+          "content_quality": "good"
+        }
+      ],
+      "errors": []
+    }
+  }
+}

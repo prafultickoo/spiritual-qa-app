@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Option 3: Modern Zen Palette - Spiritual Q&A</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            /* Option 3: Modern Zen Palette */
+            --primary-color: #60A5FA;        /* Aqua Blue - promotes calmness during use */
+            --secondary-color: #FFFFFF;      /* Pure White - clean, minimalist */
+            --accent-color: #6EE7B7;         /* Soft Mint - for notifications and success states */
+            --background-light: #F0F9FF;     /* Subtle blue tint */
+            --text-primary: #0F172A;         /* Dark text for high contrast */
+            --text-secondary: #64748B;       /* Medium slate for secondary text */
+            --glass-bg: rgba(255, 255, 255, 0.25);  /* Pure white glass */
+            --glass-border: rgba(96, 165, 250, 0.2); /* Blue-tinted borders */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, 
+                #E0F2FE 0%, 
+                var(--primary-color) 30%,
+                var(--secondary-color) 70%, 
+                var(--accent-color) 100%);
+            min-height: 100vh;
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 20px 30px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 8px 32px rgba(96, 165, 250, 0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            font-size: 24px;
+            color: var(--primary-color);
+            filter: drop-shadow(0 0 8px rgba(96, 165, 250, 0.3));
+        }
+
+        .logo-text {
+            font-family: 'Crimson Text', serif;
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-primary);
+            letter-spacing: -0.5px;
+        }
+
+        .settings-icon {
+            font-size: 20px;
+            color: var(--primary-color);
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .settings-icon:hover {
+            background: var(--glass-bg);
+            transform: scale(1.1);
+        }
+
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(96, 165, 250, 0.08);
+        }
+
+        .chat-messages {
+            flex: 1;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .message {
+            max-width: 70%;
+            padding: 18px 24px;
+            border-radius: 18px;
+            line-height: 1.6;
+            font-size: 15px;
+            position: relative;
+        }
+
+        .user-message {
+            align-self: flex-end;
+            background: linear-gradient(135deg, var(--primary-color), #3B82F6);
+            color: white;
+            border-bottom-right-radius: 6px;
+            box-shadow: 0 4px 12px rgba(96, 165, 250, 0.25);
+        }
+
+        .bot-message {
+            align-self: flex-start;
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--text-primary);
+            border: 1px solid var(--glass-border);
+            border-bottom-left-radius: 6px;
+            border-left: 3px solid var(--accent-color);
+        }
+
+        .input-area {
+            display: flex;
+            gap: 15px;
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 15px;
+        }
+
+        .message-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+        }
+
+        .message-input::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .send-button {
+            background: linear-gradient(135deg, var(--accent-color), #34D399);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(110, 231, 183, 0.3);
+        }
+
+        .send-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(110, 231, 183, 0.4);
+        }
+
+        .palette-info {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 20px;
+            max-width: 300px;
+            box-shadow: 0 8px 32px rgba(96, 165, 250, 0.1);
+        }
+
+        .palette-title {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .color-swatch {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 8px 0;
+            font-size: 14px;
+        }
+
+        .color-circle {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .benefits {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid var(--glass-border);
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        /* Zen animations */
+        @keyframes breathe {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.05); opacity: 1; }
+        }
+
+        .logo-icon {
+            animation: breathe 4s ease-in-out infinite;
+        }
+
+        /* Subtle floating animation for messages */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-2px); }
+        }
+
+        .message:hover {
+            animation: float 2s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <i class="fas fa-om logo-icon"></i>
+                <div class="logo-text">Spiritual Wisdom</div>
+            </div>
+            <i class="fas fa-cog settings-icon"></i>
+        </div>
+
+        <div class="chat-container">
+            <div class="chat-messages">
+                <div class="message user-message">
+                    How can I practice mindfulness in a busy modern life?
+                </div>
+                
+                <div class="message bot-message">
+                    🌸 <strong>Mindfulness</strong> is not about escaping your busy life, but bringing conscious awareness to each moment within it.
+
+                    <br><br>The <strong>Buddha</strong> taught that mindfulness (sati) is the heart of meditation practice. Even amidst chaos, you can cultivate presence through simple, powerful practices.
+
+                    <br><br>🧘 <em>Modern mindfulness techniques:</em>
+                    • <strong>Breath awareness</strong> - 3 conscious breaths between tasks
+                    • <strong>Mindful transitions</strong> - Pause and breathe when changing activities
+                    • <strong>Present moment anchoring</strong> - Notice 5 things you can see/hear right now
+                    • <strong>Loving-kindness</strong> - Send goodwill to people you encounter
+                    
+                    <br><br>✨ Remember: You don't need perfect conditions for peace. The present moment is always available to you.
+                </div>
+
+                <div class="message user-message">
+                    What is the role of surrender in spiritual growth?
+                </div>
+
+                <div class="message bot-message">
+                    🕊️ <strong>Surrender</strong> is not giving up, but giving over - releasing the illusion of control to align with the flow of existence.
+
+                    <br><br>The <strong>Tao Te Ching</strong> teaches: <em>"The sage does not attempt anything very big, and thus achieves greatness."</em> True power comes from harmony with the natural order, not forcing outcomes.
+
+                    <br><br>🌊 <em>The art of surrender:</em>
+                    • Trust the intelligence of life itself
+                    • Release attachment to specific outcomes  
+                    • Act with full effort, then let go of results
+                    • Find peace in uncertainty and change
+                    
+                    <br><br>🌱 When you stop fighting the river, you discover you are the river - and the ocean it returns to.
+                </div>
+            </div>
+
+            <div class="input-area">
+                <input type="text" class="message-input" placeholder="Find peace in your inquiry...">
+                <button class="send-button">
+                    <i class="fas fa-feather-alt"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="palette-info">
+        <div class="palette-title">Option 3: Modern Zen</div>
+        
+        <div class="color-swatch">
+            <div class="color-circle" style="background-color: #60A5FA;"></div>
+            <span>Aqua Blue (Primary)</span>
+        </div>
+        
+        <div class="color-swatch">
+            <div class="color-circle" style="background-color: #FFFFFF;"></div>
+            <span>Pure White (Secondary)</span>
+        </div>
+        
+        <div class="color-swatch">
+            <div class="color-circle" style="background-color: #6EE7B7;"></div>
+            <span>Soft Mint (Accent)</span>
+        </div>
+
+        <div class="benefits">
+            <strong>Benefits:</strong><br>
+            • Reduces stress by 20%<br>
+            • Clean & minimalist feel<br>
+            • Perfect for meditation apps<br>
+            • Calming during use<br>
+            • Modern accessibility
+        </div>
+    </div>
+</body>
+</html>

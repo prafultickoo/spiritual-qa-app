@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🕉️ Chat Interface Mockup - Spiritual Wisdom</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .chat-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            height: 80vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        /* Chat Header */
+        .chat-header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .settings-toggle {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 6px;
+            padding: 6px 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .settings-toggle:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .chat-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .chat-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        /* Reading Style Selector */
+        .style-selector {
+            background: #f8f9fa;
+            padding: 15px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .style-options {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+        }
+        
+        .style-option {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 20px;
+            padding: 6px 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: #495057;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .style-option:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+        
+        .style-option.active {
+            background: #667eea;
+            border-color: #667eea;
+            color: white;
+        }
+        
+        /* Chat Messages Area */
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .message {
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+        
+        .message.user {
+            align-self: flex-end;
+        }
+        
+        .message.bot {
+            align-self: flex-start;
+        }
+        
+        .message-bubble {
+            padding: 12px 16px;
+            border-radius: 18px;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+        
+        .message.user .message-bubble {
+            background: #667eea;
+            color: white;
+        }
+        
+        .message.bot .message-bubble {
+            background: white;
+            color: #2d3748;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .message-time {
+            font-size: 0.7rem;
+            color: #6c757d;
+            margin-top: 4px;
+            text-align: right;
+        }
+        
+        .message.bot .message-time {
+            text-align: left;
+        }
+        
+        /* Welcome message */
+        .welcome-bubble {
+            background: linear-gradient(135deg, #e3f2fd, #f3e5f5);
+            border: 1px solid #e1bee7;
+            padding: 16px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 10px;
+            color: #4a148c;
+        }
+        
+        .welcome-bubble .om-symbol {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+        }
+        
+        /* Chat Input Area */
+        .chat-input-area {
+            padding: 15px;
+            background: white;
+            border-top: 1px solid #e9ecef;
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+        }
+        
+        .chat-input {
+            flex: 1;
+            border: 1px solid #dee2e6;
+            border-radius: 20px;
+            padding: 10px 15px;
+            font-size: 0.95rem;
+            font-family: inherit;
+            resize: none;
+            max-height: 100px;
+            min-height: 40px;
+            background: #f8f9fa;
+        }
+        
+        .chat-input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+        }
+        
+        .chat-input::placeholder {
+            color: #6c757d;
+        }
+        
+        .send-button {
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+        
+        .send-button:hover {
+            background: #5a67d8;
+            transform: scale(1.05);
+        }
+        
+        .send-button:disabled {
+            background: #ced4da;
+            cursor: not-allowed;
+            transform: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <!-- Chat Header -->
+        <div class="chat-header">
+            <div class="settings-toggle" title="Settings">⚙️</div>
+            <div class="chat-title">🕉️ Spiritual Wisdom</div>
+            <div class="chat-subtitle">Your spiritual guide</div>
+        </div>
+        
+        <!-- Reading Style Selector -->
+        <div class="style-selector">
+            <div class="style-options">
+                <div class="style-option">
+                    <span>🧘</span>
+                    <span>Contemplative</span>
+                </div>
+                <div class="style-option active">
+                    <span>⚖️</span>
+                    <span>Balanced</span>
+                </div>
+                <div class="style-option">
+                    <span>🎓</span>
+                    <span>Scholarly</span>
+                </div>
+                <div class="style-option">
+                    <span>🎯</span>
+                    <span>Practical</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Chat Messages -->
+        <div class="chat-messages">
+            <!-- Welcome Message -->
+            <div class="welcome-bubble">
+                <div class="om-symbol">🕉️</div>
+                <div><strong>Namaste 🙏</strong></div>
+                <div style="font-size: 0.9rem; margin-top: 5px;">Ask me any spiritual question</div>
+            </div>
+            
+            <!-- Sample Conversation -->
+            <div class="message user">
+                <div class="message-bubble">
+                    What is the meaning of dharma?
+                </div>
+                <div class="message-time">10:30 AM</div>
+            </div>
+            
+            <div class="message bot">
+                <div class="message-bubble">
+                    Dharma is your righteous path in life - your duty, purpose, and the natural order that guides your actions. It encompasses both universal principles of righteousness and your personal life mission.
+                    <br><br>
+                    Think of dharma as the river that flows naturally toward the ocean. When you follow your dharma, life flows with greater ease and meaning.
+                </div>
+                <div class="message-time">10:31 AM</div>
+            </div>
+            
+            <div class="message user">
+                <div class="message-bubble">
+                    How do I find my dharma?
+                </div>
+                <div class="message-time">10:32 AM</div>
+            </div>
+            
+            <div class="message bot">
+                <div class="message-bubble">
+                    To discover your dharma, observe what brings you joy and serves others simultaneously. Your dharma lies at the intersection of your natural talents, what the world needs, and what brings you deep fulfillment.
+                    <br><br>
+                    Practice meditation, self-reflection, and pay attention to what activities make you lose track of time.
+                </div>
+                <div class="message-time">10:33 AM</div>
+            </div>
+        </div>
+        
+        <!-- Chat Input -->
+        <div class="chat-input-area">
+            <textarea 
+                class="chat-input" 
+                placeholder="Ask your spiritual question..."
+                rows="1"
+            ></textarea>
+            <button class="send-button">
+                ➤
+            </button>
+        </div>
+    </div>
+</body>
+</html>

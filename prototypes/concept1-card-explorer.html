@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🕉️ Spiritual Wisdom - Card Explorer</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #fafbfc;
+            color: #333;
+        }
+
+        .header {
+            position: sticky;
+            top: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #e1e5e9;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            color: #6366f1;
+            text-decoration: none;
+        }
+
+        .search-container {
+            flex: 1;
+            max-width: 600px;
+            position: relative;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 14px 20px 14px 48px;
+            border: 2px solid #e1e5e9;
+            border-radius: 25px;
+            font-size: 16px;
+            background: white;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .search-bar:focus {
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        .filter-tabs {
+            background: white;
+            border-bottom: 1px solid #e1e5e9;
+            padding: 0 24px;
+        }
+
+        .tabs-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            gap: 32px;
+        }
+
+        .tab {
+            padding: 16px 0;
+            font-weight: 500;
+            color: #6b7280;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .tab.active {
+            color: #6366f1;
+            border-bottom-color: #6366f1;
+        }
+
+        .tab-count {
+            background: #f3f4f6;
+            color: #6b7280;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        .tab.active .tab-count {
+            background: #6366f1;
+            color: white;
+        }
+
+        .main-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 32px 24px;
+        }
+
+        .cards-grid {
+            columns: 4;
+            column-gap: 24px;
+        }
+
+        @media (max-width: 1200px) { .cards-grid { columns: 3; } }
+        @media (max-width: 768px) { .cards-grid { columns: 2; } }
+        @media (max-width: 480px) { .cards-grid { columns: 1; } }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            margin-bottom: 24px;
+            break-inside: avoid;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 1px solid #f1f3f4;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            border-color: #6366f1;
+        }
+
+        .card-header {
+            padding: 20px 20px 0;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+        }
+
+        .card-type {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .card-type.question {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .card-type.answer {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .card-type.insight {
+            background: #f3e8ff;
+            color: #7c3aed;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 8px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .card:hover .card-actions {
+            opacity: 1;
+        }
+
+        .action-btn {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: #f9fafb;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .action-btn:hover {
+            background: #f3f4f6;
+            transform: scale(1.1);
+        }
+
+        .action-btn.favorited {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .card-content {
+            padding: 16px 20px 20px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+
+        .card-text {
+            color: #4b5563;
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .card-quote {
+            background: #f8fafc;
+            border-left: 4px solid #6366f1;
+            padding: 16px;
+            margin: 16px 0;
+            border-radius: 0 8px 8px 0;
+            font-style: italic;
+            color: #374151;
+        }
+
+        .card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .tag {
+            background: #f1f5f9;
+            color: #475569;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .card-footer {
+            padding: 0 20px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 13px;
+            color: #9ca3af;
+        }
+
+        .card-stats {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .fab {
+            position: fixed;
+            bottom: 32px;
+            right: 32px;
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            border-radius: 50%;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
+            transition: all 0.3s ease;
+            z-index: 50;
+        }
+
+        .fab:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 30px rgba(99, 102, 241, 0.6);
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            max-width: 600px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 24px;
+        }
+
+        .question-input {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 16px;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 120px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .question-input:focus {
+            border-color: #6366f1;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: #6366f1;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5856eb;
+        }
+
+        .btn-secondary {
+            background: #f9fafb;
+            color: #374151;
+            border: 1px solid #d1d5db;
+        }
+
+        .btn-secondary:hover {
+            background: #f3f4f6;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="#" class="logo">🕉️ Spiritual Wisdom</a>
+            
+            <div class="search-container">
+                <div class="search-icon">🔍</div>
+                <input type="text" class="search-bar" placeholder="Search wisdom, ask questions, explore topics..." id="search-input">
+            </div>
+            
+            <div class="user-avatar">S</div>
+        </div>
+    </header>
+
+    <nav class="filter-tabs">
+        <div class="tabs-container">
+            <div class="tab active" data-filter="all">All <span class="tab-count">24</span></div>
+            <div class="tab" data-filter="recent">Recent <span class="tab-count">8</span></div>
+            <div class="tab" data-filter="favorites">Favorites <span class="tab-count">5</span></div>
+            <div class="tab" data-filter="deep">Deep Learning <span class="tab-count">7</span></div>
+            <div class="tab" data-filter="quick">Quick Answers <span class="tab-count">4</span></div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="cards-grid" id="cards-grid">
+            <!-- Sample Cards -->
+            <div class="card" data-category="answer">
+                <div class="card-header">
+                    <div class="card-type answer">Answer</div>
+                    <div class="card-actions">
+                        <button class="action-btn" title="Favorite">⭐</button>
+                        <button class="action-btn" title="Share">📤</button>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <h3 class="card-title">What is the meaning of dharma?</h3>
+                    <p class="card-text"><strong>Om!</strong> Dharma represents your life's righteous path and duty. It's not just following rules, but understanding your unique purpose in the cosmic order.</p>
+                    <div class="card-quote">"धर्मो रक्षति रक्षितः" - Dharma protects those who protect dharma.</div>
+                    <div class="card-tags">
+                        <span class="tag">Dharma</span>
+                        <span class="tag">Life Purpose</span>
+                        <span class="tag">Sanskrit</span>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="card-time">🕐 2 hours ago</div>
+                    <div class="card-stats">
+                        <div class="stat"><span>👁️</span> 42</div>
+                        <div class="stat"><span>💡</span> 8</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" data-category="insight">
+                <div class="card-header">
+                    <div class="card-type insight">Daily Insight</div>
+                    <div class="card-actions">
+                        <button class="action-btn favorited" title="Favorited">⭐</button>
+                        <button class="action-btn" title="Share">📤</button>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <h3 class="card-title">The Power of Present Moment</h3>
+                    <p class="card-text"><strong>Om!</strong> Every moment contains the seed of eternity. When you fully embrace the present, you touch the divine essence that flows through all existence.</p>
+                    <div class="card-tags">
+                        <span class="tag">Mindfulness</span>
+                        <span class="tag">Present Moment</span>
+                        <span class="tag">Featured</span>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="card-time">🌅 Today's wisdom</div>
+                    <div class="card-stats">
+                        <div class="stat"><span>❤️</span> 156</div>
+                        <div class="stat"><span>💡</span> 23</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" data-category="answer">
+                <div class="card-header">
+                    <div class="card-type answer">Answer</div>
+                    <div class="card-actions">
+                        <button class="action-btn" title="Favorite">⭐</button>
+                        <button class="action-btn" title="Share">📤</button>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <h3 class="card-title">Simple meditation for beginners</h3>
+                    <p class="card-text"><strong>Om!</strong> Begin with just 5 minutes daily. Sit comfortably, close your eyes, and focus on your natural breath. When your mind wanders, gently return to the breath without judgment.</p>
+                    <div class="card-quote">"Meditation is not about stopping thoughts, but learning to observe them like clouds passing in the sky."</div>
+                    <div class="card-tags">
+                        <span class="tag">Meditation</span>
+                        <span class="tag">Beginner</span>
+                        <span class="tag">Practical</span>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="card-time">🕐 3 days ago</div>
+                    <div class="card-stats">
+                        <div class="stat"><span>👁️</span> 234</div>
+                        <div class="stat"><span>💡</span> 45</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" data-category="question">
+                <div class="card-header">
+                    <div class="card-type question">Question</div>
+                    <div class="card-actions">
+                        <button class="action-btn" title="Favorite">⭐</button>
+                        <button class="action-btn" title="Share">📤</button>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <h3 class="card-title">How can I find inner peace in chaos?</h3>
+                    <div class="card-tags">
+                        <span class="tag">Inner Peace</span>
+                        <span class="tag">Meditation</span>
+                        <span class="tag">Practical</span>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="card-time">🕐 5 minutes ago</div>
+                    <div class="card-stats">
+                        <div class="stat"><span>💬</span> Pending</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <button class="fab" id="ask-question-btn" title="Ask New Question">✏️</button>
+
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal">
+            <h2 class="modal-title">Ask a Spiritual Question</h2>
+            <textarea class="question-input" id="question-input" placeholder="What spiritual guidance are you seeking today? Ask about life, dharma, karma, meditation, or any topic that touches your soul..."></textarea>
+            <div class="modal-actions">
+                <button class="btn btn-primary" id="submit-question">Ask Question</button>
+                <button class="btn btn-secondary" id="cancel-question">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+            });
+        });
+
+        // Modal functionality
+        const modal = document.getElementById('modal-overlay');
+        const askBtn = document.getElementById('ask-question-btn');
+        const submitBtn = document.getElementById('submit-question');
+        const cancelBtn = document.getElementById('cancel-question');
+        const questionInput = document.getElementById('question-input');
+
+        askBtn.addEventListener('click', () => {
+            modal.style.display = 'flex';
+            questionInput.focus();
+        });
+
+        [cancelBtn].forEach(btn => {
+            btn.addEventListener('click', () => {
+                modal.style.display = 'none';
+                questionInput.value = '';
+            });
+        });
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.style.display = 'none';
+                questionInput.value = '';
+            }
+        });
+
+        // Submit question
+        submitBtn.addEventListener('click', () => {
+            const question = questionInput.value.trim();
+            if (question) {
+                addQuestionCard(question);
+                modal.style.display = 'none';
+                questionInput.value = '';
+                
+                setTimeout(() => addAnswerCard(question), 2000);
+            }
+        });
+
+        // Favorite functionality
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('action-btn') && e.target.title === 'Favorite') {
+                e.target.classList.toggle('favorited');
+            }
+        });
+
+        function addQuestionCard(question) {
+            const grid = document.getElementById('cards-grid');
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.dataset.category = 'question';
+            
+            card.innerHTML = `
+                <div class="card-header">
+                    <div class="card-type question">Question</div>
+                    <div class="card-actions">
+                        <button class="action-btn" title="Favorite">⭐</button>
+                        <button class="action-btn" title="Share">📤</button>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <h3 class="card-title">${question}</h3>
+                    <div class="card-tags">
+                        <span class="tag">New Question</span>
+                        <span class="tag">Pending</span>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="card-time">🕐 Just now</div>
+                    <div class="card-stats">
+                        <div class="stat"><span>💬</span> Processing...</div>
+                    </div>
+                </div>
+            `;
+            
+            grid.insertBefore(card, grid.firstChild);
+        }
+
+        function addAnswerCard(question) {
+            const grid = document.getElementById('cards-grid');
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.dataset.category = 'answer';
+            
+            card.innerHTML = `
+                <div class="card-header">
+                    <div class="card-type answer">Answer</div>
+                    <div class="card-actions">
+                        <button class="action-btn" title="Favorite">⭐</button>
+                        <button class="action-btn" title="Share">📤</button>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <h3 class="card-title">${question}</h3>
+                    <p class="card-text"><strong>Om!</strong> Your question touches the heart of spiritual seeking. The answer lies within the ancient wisdom that teaches us to look beyond the surface of our experiences.</p>
+                    <div class="card-tags">
+                        <span class="tag">New Answer</span>
+                        <span class="tag">Wisdom</span>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="card-time">🕐 Just now</div>
+                    <div class="card-stats">
+                        <div class="stat"><span>👁️</span> 1</div>
+                        <div class="stat"><span>💡</span> 0</div>
+                    </div>
+                </div>
+            `;
+            
+            grid.insertBefore(card, grid.firstChild);
+        }
+    </script>
+</body>
+</html>

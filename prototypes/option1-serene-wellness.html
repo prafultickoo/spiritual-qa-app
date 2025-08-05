@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Option 1: Serene Wellness Palette - Spiritual Q&A</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            /* Option 1: Serene Wellness Palette */
+            --primary-color: #4ADE80;        /* Soft Sage Green - promotes peace and growth */
+            --secondary-color: #FEFCE8;      /* Warm Cream - gentle, non-straining background */
+            --accent-color: #0F766E;         /* Deep Teal - for buttons and highlights */
+            --text-primary: #0F172A;         /* Dark text for high contrast */
+            --text-secondary: #374151;       /* Medium gray for secondary text */
+            --glass-bg: rgba(254, 252, 232, 0.15);  /* Cream-tinted glass */
+            --glass-border: rgba(74, 222, 128, 0.2); /* Green-tinted borders */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, 
+                var(--primary-color) 0%, 
+                var(--secondary-color) 50%, 
+                #E8F5E8 100%);
+            min-height: 100vh;
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 20px 30px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            font-size: 24px;
+            color: var(--accent-color);
+        }
+
+        .logo-text {
+            font-family: 'Crimson Text', serif;
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .settings-icon {
+            font-size: 20px;
+            color: var(--accent-color);
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .settings-icon:hover {
+            background: var(--glass-bg);
+        }
+
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .chat-messages {
+            flex: 1;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .message {
+            max-width: 70%;
+            padding: 18px 24px;
+            border-radius: 18px;
+            line-height: 1.6;
+            font-size: 15px;
+            position: relative;
+        }
+
+        .user-message {
+            align-self: flex-end;
+            background: var(--accent-color);
+            color: white;
+            border-bottom-right-radius: 6px;
+        }
+
+        .bot-message {
+            align-self: flex-start;
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--text-primary);
+            border: 1px solid var(--glass-border);
+            border-bottom-left-radius: 6px;
+        }
+
+        .input-area {
+            display: flex;
+            gap: 15px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 15px;
+        }
+
+        .message-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+        }
+
+        .message-input::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .send-button {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .send-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(15, 118, 110, 0.3);
+        }
+
+        .palette-info {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 20px;
+            max-width: 300px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .palette-title {
+            font-weight: 600;
+            color: var(--accent-color);
+            margin-bottom: 10px;
+        }
+
+        .color-swatch {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 8px 0;
+            font-size: 14px;
+        }
+
+        .color-circle {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .benefits {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid var(--glass-border);
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <i class="fas fa-lotus-flower logo-icon"></i>
+                <div class="logo-text">Spiritual Wisdom</div>
+            </div>
+            <i class="fas fa-cog settings-icon"></i>
+        </div>
+
+        <div class="chat-container">
+            <div class="chat-messages">
+                <div class="message user-message">
+                    What is the meaning of dharma in daily life?
+                </div>
+                
+                <div class="message bot-message">
+                    🙏 <strong>Dharma</strong> in daily life is your righteous path - the duties and principles that align with your true nature and serve the greater good.
+
+                    <br><br>The <strong>Bhagavad Gita</strong> teaches us that dharma is not just following rules, but acting with awareness of your role in this interconnected world. When you speak truthfully, work with dedication, and treat others with compassion, you live your dharma.
+
+                    <br><br>✨ <em>Daily dharma practice:</em>
+                    • Follow your conscience in difficult decisions
+                    • Honor your responsibilities to family and society  
+                    • Act without attachment to results
+                    • Serve others as an expression of the divine within
+                </div>
+
+                <div class="message user-message">
+                    How can I find inner peace during stressful times?
+                </div>
+
+                <div class="message bot-message">
+                    🧘‍♀️ <strong>Inner peace</strong> arises when you remember that you are not the waves, but the ocean itself.
+
+                    <br><br>The <strong>Upanishads</strong> guide us: <em>"You are not the doer, you are the witness."</em> In stress, step back and observe your thoughts without identifying with them.
+
+                    <br><br>🌱 <em>Practical steps for peace:</em>
+                    • Practice deep breathing (pranayama) for 5 minutes
+                    • Meditate on the impermanent nature of all situations
+                    • Chant "Om Shanti" to invoke divine tranquility
+                    • Surrender the outcome to the universe's wisdom
+                </div>
+            </div>
+
+            <div class="input-area">
+                <input type="text" class="message-input" placeholder="Ask your spiritual question...">
+                <button class="send-button">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="palette-info">
+        <div class="palette-title">Option 1: Serene Wellness</div>
+        
+        <div class="color-swatch">
+            <div class="color-circle" style="background-color: #4ADE80;"></div>
+            <span>Soft Sage Green (Primary)</span>
+        </div>
+        
+        <div class="color-swatch">
+            <div class="color-circle" style="background-color: #FEFCE8;"></div>
+            <span>Warm Cream (Secondary)</span>
+        </div>
+        
+        <div class="color-swatch">
+            <div class="color-circle" style="background-color: #0F766E;"></div>
+            <span>Deep Teal (Accent)</span>
+        </div>
+
+        <div class="benefits">
+            <strong>Benefits:</strong><br>
+            • Reduces stress by 18%<br>
+            • Promotes peace and growth<br>
+            • Perfect for spiritual/wellness apps<br>
+            • High contrast for accessibility
+        </div>
+    </div>
+</body>
+</html>

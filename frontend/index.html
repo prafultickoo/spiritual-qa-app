@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🕉️ Spiritual Wisdom - Ancient Guidance for Modern Souls</title>
+    
+    <!-- External Fonts and Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Noto+Sans+Devanagari:wght@300;400;500;600;700&family=Mukti:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Modern Zen Theme Stylesheet -->
+    <link rel="stylesheet" href="modern-zen.css?v=5.0">
+    <script>console.log('🧘‍♂️ Modern Zen Theme - Exact Prototype Match v5.0');</script>
+    
+    <!-- Simple Tooltip Function -->
+    <script>
+        function toggleTooltip(tooltipId) {
+            console.log('💬 Toggling tooltip:', tooltipId);
+            const tooltip = document.getElementById(tooltipId);
+            if (tooltip) {
+                const isVisible = tooltip.style.display === 'block';
+                tooltip.style.display = isVisible ? 'none' : 'block';
+                console.log('✅ Tooltip', tooltipId, isVisible ? 'hidden' : 'shown');
+            } else {
+                console.log('❌ Tooltip element not found:', tooltipId);
+            }
+        }
+    </script>
+    
+    <!-- Meta Tags for SEO -->
+    <meta name="description" content="AI-powered spiritual guidance system with access to ancient wisdom texts including Vedas, Upanishads, Bhagavad Gita, and Mahabharata">
+    <meta name="keywords" content="spiritual guidance, ancient wisdom, meditation, dharma, karma, moksha, spiritual AI">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🕉️</text></svg>">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loading">
+        <div class="loading-content">
+            <div class="om-symbol">🕉️</div>
+            <div class="loading-text">Connecting to Divine Wisdom...</div>
+            <div class="loading-spinner"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">
+                <div class="logo-icon">🕉️</div>
+                <div class="logo-text">Spiritual Wisdom : Your personal guide for all spiritual teachings</div>
+            </div>
+            <div class="settings-icon" id="settings-toggle" title="Settings">⚙️</div>
+        </div>
+
+        <!-- Chat Container -->
+        <div class="chat-container">
+            <!-- Chat Messages -->
+            <div class="chat-messages" id="chat-messages">
+                <!-- Test Sanskrit Rendering -->
+                <div class="message bot-message">
+                    <strong>🕉️ Sanskrit Rendering Test:</strong><br>
+                    <div class="sanskrit-text">
+                        <p><strong>Bhagavad Gita (2.47):</strong></p>
+                        <p>कर्मण्येवाधिकारस्ते मा फलेषु कदाचन।<br>
+                        मा कर्मफलहेतुर्भूर्मा ते सङ्गोऽस्त्वकर्मणि॥</p>
+                        <p><em>karmaṇyevādhikāras te mā phaleṣu kadācana<br>
+                        mā karmaphalaheturbhūr mā te saṅgo'stvakarmaṇi</em></p>
+                        <p><strong>Translation:</strong> You have a right to perform your prescribed duty, but not to the fruits of action. Never consider yourself the cause of the results of your activities, and never be attached to not doing your duty.</p>
+                    </div>
+                </div>
+                <!-- Messages will appear here dynamically -->
+            </div>
+            
+            <!-- Input Area -->
+            <div class="input-area">
+                <form id="wisdom-form" class="input-form">
+                    <textarea 
+                        id="wisdom-question"
+                        class="message-input" 
+                        placeholder="Ask your spiritual question..."
+                        rows="1"
+                        required
+                    ></textarea>
+                    <button type="submit" class="send-button" id="send-button">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+        
+    <!-- Settings Panel (Hidden) -->
+        <div class="settings-panel" id="settings-panel" style="display: none;">
+            <div class="settings-content">
+                <div class="settings-header">
+                    <h3>⚙️ Settings</h3>
+                    <button class="close-settings" id="close-settings">×</button>
+                </div>
+                
+                <div class="settings-body">
+                    <div class="setting-group numbered-section">
+                        <label><span class="section-number">1.</span> AI Model</label>
+                        <select id="model-select" class="setting-select">
+                            <option value="gpt-4.1">GPT-4.1</option>
+                            <option value="gpt-4o">GPT-4o</option>
+                            <option value="o3-mini">o3 mini (Reasoning) 🧠</option>
+                            <option value="claude-3-opus">Claude 3 Opus</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Reasoning Effort Control (only for o3-mini) -->
+                    <div class="setting-group" id="reasoning-effort-group" style="display: none;">
+                        <label>Reasoning Effort</label>
+                        <select id="reasoning-effort-select" class="setting-select">
+                            <option value="low">🚀 Low (Fast)</option>
+                            <option value="medium" selected>⚖️ Medium (Balanced)</option>
+                            <option value="high">🧠 High (Deep Thinking)</option>
+                        </select>
+                        <div class="setting-help">
+                            💡 Higher reasoning effort means more thorough analysis but longer response time
+                        </div>
+                    </div>
+                    
+                    <!-- RAG Technique Selector -->
+                    <div class="setting-group numbered-section">
+                        <label>
+                            <span class="section-number">2.</span> Processing Method (RAG Technique)
+                            <span class="info-icon" onclick="toggleTooltip('processing-tooltip')" title="Click for details">ⓘ</span>
+                        </label>
+                        <select id="rag-technique-select" class="setting-select">
+                            <option value="stuff" selected>📦 Stuff (Fast & Cheap)</option>
+                            <option value="refine">🔄 Refine (High Quality)</option>
+                            <option value="map_reduce">🗺️ Map-Reduce (Parallel)</option>
+                            <option value="map_rerank">🏆 Map-Rerank (Best Answer)</option>
+                            <option value="selective">🎯 Selective (Smart)</option>
+                        </select>
+                        <div class="info-tooltip" id="processing-tooltip" style="display: none;">
+                            📊 Different techniques offer trade-offs between speed, cost, and quality. <br>
+                            <strong>Stuff</strong>: Fastest & cheapest | <strong>Refine</strong>: Highest quality but expensive | <strong>Selective</strong>: Best balance
+                        </div>
+                    </div>
+                    
+                    <!-- Reading Style Selector -->
+                    <div class="setting-group numbered-section">
+                        <label>
+                            <span class="section-number">3.</span> Reading Style
+                            <span class="info-icon" onclick="toggleTooltip('reading-style-tooltip')" title="Click for details">ⓘ</span>
+                        </label>
+                        <select id="reading-style-select" class="setting-select">
+                            <option value="deep">Deep</option>
+                            <option value="balanced" selected>Balanced</option>
+                            <option value="practical">Practical</option>
+                        </select>
+                        <div class="info-tooltip" id="reading-style-tooltip" style="display: none;">
+                            💡 Choose how you want information retrieved and presented
+                        </div>
+                    </div>
+                    
+                    <div class="setting-group numbered-section">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="use-mmr" checked>
+                            <span class="checkmark"></span>
+                            <span class="section-number">4.</span> Use MMR (Advanced Retrieval)
+                        </label>
+                    </div>
+                    
+                    <div class="setting-group numbered-section">
+                        <label for="k-parameter"><span class="section-number">5.</span> Context Documents: <span id="k-value">10</span></label>
+                        <input type="range" id="k-parameter" min="3" max="15" value="10" class="slider">
+                    </div>
+                    
+                    <div class="setting-group numbered-section">
+                        <label for="diversity-parameter"><span class="section-number">6.</span> Diversity: <span id="diversity-value">0.3</span></label>
+                        <input type="range" id="diversity-parameter" min="0" max="1" step="0.1" value="0.3" class="slider">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification System -->
+    <div id="notification-container" class="notification-container"></div>
+
+    <!-- Scripts -->
+    <script src="config.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

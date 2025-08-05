@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Option 2: Premium Spiritual Palette - Spiritual Q&A</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            /* Option 2: Premium Spiritual Palette */
+            --primary-color: #1E3A8A;        /* Deep Navy - builds trust and focus */
+            --secondary-color: #D4AF37;      /* Soft Gold - adds luxury and wisdom */
+            --accent-color: #A855F7;         /* Lavender - spiritual, creative energy */
+            --background-light: #F8FAFC;     /* Very light blue-gray */
+            --text-primary: #0F172A;         /* Dark text for high contrast */
+            --text-secondary: #475569;       /* Medium gray for secondary text */
+            --glass-bg: rgba(248, 250, 252, 0.2);  /* Light-tinted glass */
+            --glass-border: rgba(212, 175, 55, 0.3); /* Gold-tinted borders */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, 
+                var(--primary-color) 0%, 
+                #2563EB 25%,
+                var(--secondary-color) 70%, 
+                #F59E0B 100%);
+            min-height: 100vh;
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 20px 30px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 8px 32px rgba(212, 175, 55, 0.2);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            font-size: 24px;
+            color: var(--secondary-color);
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+        }
+
+        .logo-text {
+            font-family: 'Crimson Text', serif;
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--background-light);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .settings-icon {
+            font-size: 20px;
+            color: var(--secondary-color);
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .settings-icon:hover {
+            background: var(--glass-bg);
+            transform: rotate(90deg);
+        }
+
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(212, 175, 55, 0.15);
+        }
+
+        .chat-messages {
+            flex: 1;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .message {
+            max-width: 70%;
+            padding: 18px 24px;
+            border-radius: 18px;
+            line-height: 1.6;
+            font-size: 15px;
+            position: relative;
+        }
+
+        .user-message {
+            align-self: flex-end;
+            background: linear-gradient(135deg, var(--accent-color), #C084FC);
+            color: white;
+            border-bottom-right-radius: 6px;
+            box-shadow: 0 4px 12px rgba(168, 85, 247, 0.3);
+        }
+
+        .bot-message {
+            align-self: flex-start;
+            background: rgba(248, 250, 252, 0.95);
+            color: var(--text-primary);
+            border: 1px solid var(--glass-border);
+            border-bottom-left-radius: 6px;
+            border-left: 4px solid var(--secondary-color);
+        }
+
+        .input-area {
+            display: flex;
+            gap: 15px;
+            background: rgba(248, 250, 252, 0.25);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 15px;
+        }
+
+        .message-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+        }
+
+        .message-input::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .send-button {
+            background: linear-gradient(135deg, var(--secondary-color), #F59E0B);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+        }
+
+        .send-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+        }
+
+        .palette-info {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(248, 250, 252, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 20px;
+            max-width: 300px;
+            box-shadow: 0 8px 32px rgba(212, 175, 55, 0.2);
+        }
+
+        .palette-title {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .color-swatch {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 8px 0;
+            font-size: 14px;
+        }
+
+        .color-circle {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .benefits {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid var(--glass-border);
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        /* Premium touch: subtle animations */
+        @keyframes shimmer {
+            0% { background-position: -200px 0; }
+            100% { background-position: calc(200px + 100%) 0; }
+        }
+
+        .logo-text::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 3s ease-in-out infinite 2s;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <i class="fas fa-infinity logo-icon"></i>
+                <div class="logo-text">Spiritual Wisdom</div>
+            </div>
+            <i class="fas fa-cog settings-icon"></i>
+        </div>
+
+        <div class="chat-container">
+            <div class="chat-messages">
+                <div class="message user-message">
+                    What is the significance of meditation in achieving moksha?
+                </div>
+                
+                <div class="message bot-message">
+                    🧘‍♂️ <strong>Meditation</strong> is the royal path to moksha - the ultimate liberation of the soul from the cycle of birth and death.
+
+                    <br><br>The <strong>Yoga Sutras of Patanjali</strong> reveal that through deep meditation (dhyana), the mind transcends its limitations and merges with pure consciousness. This is not mere relaxation, but the dissolution of the ego-self into the infinite Self.
+
+                    <br><br>✨ <em>The sacred journey:</em>
+                    • <strong>Dharana</strong> - Focused concentration on the divine
+                    • <strong>Dhyana</strong> - Unbroken flow of awareness  
+                    • <strong>Samadhi</strong> - Complete union with the absolute
+                    
+                    <br><br>🏛️ When you sit in stillness, you return to your true nature - <em>Sat-Chit-Ananda</em> (existence-consciousness-bliss). This is moksha realized.
+                </div>
+
+                <div class="message user-message">
+                    How do I overcome attachment to material things?
+                </div>
+
+                <div class="message bot-message">
+                    🌅 <strong>Detachment</strong> is not rejection, but understanding the true nature of impermanence.
+
+                    <br><br>Lord Krishna teaches in the <strong>Bhagavad Gita</strong>: <em>"You have the right to perform action, but never to the fruits of action."</em> Material things are tools for experience, not sources of lasting happiness.
+
+                    <br><br>🏺 <em>The wisdom practice:</em>
+                    • See yourself as a trustee, not owner of possessions
+                    • Practice gratitude for what serves your spiritual growth
+                    • Release with love what no longer serves
+                    • Find the eternal joy within, beyond all external forms
+                    
+                    <br><br>💎 True wealth is the recognition of your divine nature - this can never be lost or taken away.
+                </div>
+            </div>
+
+            <div class="input-area">
+                <input type="text" class="message-input" placeholder="Seek wisdom from the eternal teachings...">
+                <button class="send-button">
+                    <i class="fas fa-om"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="palette-info">
+        <div class="palette-title">Option 2: Premium Spiritual</div>
+        
+        <div class="color-swatch">
+            <div class="color-circle" style="background-color: #1E3A8A;"></div>
+            <span>Deep Navy (Primary)</span>
+        </div>
+        
+        <div class="color-swatch">
+            <div class="color-circle" style="background-color: #D4AF37;"></div>
+            <span>Soft Gold (Secondary)</span>
+        </div>
+        
+        <div class="color-swatch">
+            <div class="color-circle" style="background-color: #A855F7;"></div>
+            <span>Lavender (Accent)</span>
+        </div>
+
+        <div class="benefits">
+            <strong>Benefits:</strong><br>
+            • Builds trust (+30%)<br>
+            • Premium luxury feel<br>
+            • Spiritual & creative energy<br>
+            • High perceived quality<br>
+            • Perfect for wisdom apps
+        </div>
+    </div>
+</body>
+</html>

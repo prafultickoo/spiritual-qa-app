@@ -1,0 +1,69 @@
+verify_vector_store_integrity:
+  description: >
+    Verify the structural integrity and accessibility of the ChromaDB vector store.
+    Check that the database files exist, are readable, and contain the expected number of documents.
+    Validate that the vector store can be loaded successfully and metadata is accessible.
+  expected_output: >
+    A detailed report on vector store integrity including:
+    - Database file existence and size
+    - Number of stored documents/chunks
+    - Collection metadata validation
+    - Vector store loading success status
+    - Any structural issues or errors found
+  agent: verification_agent
+
+test_similarity_search:
+  description: >
+    Perform comprehensive similarity search tests using various spiritual queries.
+    Test different types of queries including Sanskrit terms, English concepts, 
+    and mixed language queries to ensure proper retrieval functionality.
+  expected_output: >
+    A comprehensive similarity search test report including:
+    - Test queries executed and their results
+    - Relevance scores and ranking validation
+    - Sanskrit verse preservation verification
+    - Search performance metrics
+    - Any retrieval accuracy issues identified
+  agent: verification_agent
+
+validate_metadata_preservation:
+  description: >
+    Validate that all document metadata, especially Sanskrit verses and spiritual content,
+    has been properly preserved during the vectorization process. Check for data integrity
+    and completeness of metadata fields.
+  expected_output: >
+    A metadata validation report containing:
+    - Sample metadata inspection results
+    - Sanskrit verse preservation status
+    - Metadata field completeness analysis
+    - Data type conversion verification
+    - Any metadata corruption or loss identified
+  agent: verification_agent
+
+check_embedding_quality:
+  description: >
+    Assess the quality of generated embeddings by testing semantic similarity
+    and clustering behavior. Verify that spiritually related concepts cluster
+    appropriately and that embeddings capture semantic meaning effectively.
+  expected_output: >
+    An embedding quality assessment report with:
+    - Semantic similarity test results
+    - Concept clustering analysis
+    - Embedding dimension and model verification
+    - Quality metrics and benchmarks
+    - Recommendations for improvement if needed
+  agent: verification_agent
+
+test_document_retrieval:
+  description: >
+    Test end-to-end document retrieval functionality with real-world spiritual queries.
+    Validate that the most relevant chunks are returned and that the retrieval system
+    works correctly for question answering scenarios.
+  expected_output: >
+    A document retrieval test report including:
+    - Real-world query test results
+    - Retrieved chunk relevance analysis
+    - Ranking and scoring validation
+    - System performance under different query types
+    - Overall retrieval system health assessment
+  agent: verification_agent

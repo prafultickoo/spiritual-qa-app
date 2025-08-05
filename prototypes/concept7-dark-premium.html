@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🕉️ Spiritual Wisdom - Dark Premium</title>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        /* Loading Screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0a0a0a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: opacity 1s ease-out;
+        }
+
+        .loading-content {
+            text-align: center;
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+            border-radius: 20px;
+            padding: 60px 40px;
+            border: 1px solid #333;
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.5),
+                0 0 80px rgba(255, 255, 255, 0.05);
+        }
+
+        .om-symbol {
+            font-size: 72px;
+            margin-bottom: 28px;
+            animation: glow 3s ease-in-out infinite;
+            background: linear-gradient(135deg, #ff6b6b, #4ecdc4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .loading-text {
+            font-size: 16px;
+            color: #888;
+            font-weight: 500;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        @keyframes glow {
+            0%, 100% { transform: scale(1); filter: brightness(1); }
+            50% { transform: scale(1.05); filter: brightness(1.2); }
+        }
+
+        /* Main App */
+        .app {
+            display: none;
+            height: 100vh;
+            background: #0a0a0a;
+        }
+
+        /* Header */
+        .header {
+            height: 70px;
+            background: #121212;
+            border-bottom: 1px solid #2a2a2a;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            position: relative;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #444, transparent);
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ff6b6b, #4ecdc4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.5px;
+        }
+
+        .status-badge {
+            background: linear-gradient(135deg, #00d084, #00f5a0);
+            color: #0a0a0a;
+            font-size: 10px;
+            font-weight: 600;
+            padding: 4px 8px;
+            border-radius: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .settings-btn {
+            width: 40px;
+            height: 40px;
+            border: 1px solid #333;
+            background: #1a1a1a;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            font-size: 16px;
+            color: #888;
+        }
+
+        .settings-btn:hover {
+            background: #2a2a2a;
+            border-color: #444;
+            color: #fff;
+            transform: translateY(-1px);
+        }
+
+        /* Reading Styles */
+        .reading-styles {
+            height: 60px;
+            background: #0f0f0f;
+            border-bottom: 1px solid #1a1a1a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 32px;
+        }
+
+        .style-tabs {
+            display: flex;
+            gap: 4px;
+            background: #1a1a1a;
+            border-radius: 12px;
+            padding: 4px;
+            border: 1px solid #2a2a2a;
+        }
+
+        .style-tab {
+            padding: 10px 20px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #888;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            letter-spacing: 0.5px;
+        }
+
+        .style-tab.active {
+            background: linear-gradient(135deg, #ff6b6b, #4ecdc4);
+            color: #0a0a0a;
+            font-weight: 600;
+        }
+
+        .style-tab:hover:not(.active) {
+            background: #2a2a2a;
+            color: #fff;
+        }
+
+        /* Messages */
+        .messages-area {
+            height: calc(100vh - 70px - 60px - 100px);
+            overflow-y: auto;
+            padding: 32px;
+            background: #0a0a0a;
+        }
+
+        .message {
+            margin-bottom: 24px;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .message.user {
+            justify-content: flex-end;
+        }
+
+        .message.bot {
+            justify-content: flex-start;
+        }
+
+        .avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+            flex-shrink: 0;
+            border: 1px solid #333;
+        }
+
+        .user-avatar {
+            background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+            color: white;
+            order: 1;
+        }
+
+        .bot-avatar {
+            background: linear-gradient(135deg, #4ecdc4, #44a08d);
+            color: white;
+        }
+
+        .message-content {
+            max-width: 65%;
+            padding: 18px 22px;
+            border-radius: 16px;
+            font-size: 15px;
+            line-height: 1.6;
+            position: relative;
+            border: 1px solid #2a2a2a;
+        }
+
+        .message.user .message-content {
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+            color: #ffffff;
+            border-radius: 16px 16px 4px 16px;
+            margin-left: 60px;
+            border-color: #333;
+        }
+
+        .message.bot .message-content {
+            background: #121212;
+            color: #ffffff;
+            border-radius: 16px 16px 16px 4px;
+            margin-right: 60px;
+            border-color: #2a2a2a;
+        }
+
+        .om-greeting {
+            font-weight: 700;
+            background: linear-gradient(135deg, #4ecdc4, #44a08d);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .message-time {
+            font-size: 11px;
+            color: #666;
+            margin-top: 8px;
+            font-weight: 400;
+        }
+
+        /* Input */
+        .input-area {
+            height: 100px;
+            background: #121212;
+            border-top: 1px solid #2a2a2a;
+            padding: 20px 32px;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-container {
+            width: 100%;
+            position: relative;
+            background: #1a1a1a;
+            border-radius: 20px;
+            border: 1px solid #333;
+            overflow: hidden;
+            transition: border-color 0.2s ease;
+        }
+
+        .input-container:focus-within {
+            border-color: #4ecdc4;
+            box-shadow: 0 0 20px rgba(78, 205, 196, 0.2);
+        }
+
+        .message-input {
+            width: 100%;
+            min-height: 50px;
+            max-height: 100px;
+            padding: 15px 60px 15px 20px;
+            border: none;
+            background: transparent;
+            font-family: inherit;
+            font-size: 15px;
+            line-height: 1.5;
+            resize: none;
+            outline: none;
+            color: #ffffff;
+            font-weight: 400;
+        }
+
+        .message-input::placeholder {
+            color: #666;
+        }
+
+        .send-button {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 36px;
+            height: 36px;
+            border: none;
+            background: linear-gradient(135deg, #ff6b6b, #4ecdc4);
+            color: white;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .send-button:hover {
+            transform: translateY(-50%) scale(1.1);
+            filter: brightness(1.1);
+        }
+
+        .send-button:disabled {
+            background: #333;
+            cursor: not-allowed;
+            transform: translateY(-50%) scale(1);
+        }
+
+        /* Settings Sidebar */
+        .settings-sidebar {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 400px;
+            height: 100vh;
+            background: #121212;
+            border-left: 1px solid #2a2a2a;
+            transition: right 0.3s ease;
+            z-index: 50;
+            overflow-y: auto;
+        }
+
+        .settings-sidebar.open {
+            right: 0;
+        }
+
+        .settings-header {
+            height: 70px;
+            padding: 0 32px;
+            border-bottom: 1px solid #2a2a2a;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #1a1a1a;
+        }
+
+        .settings-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .close-settings {
+            width: 32px;
+            height: 32px;
+            border: 1px solid #333;
+            background: #1a1a1a;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: #888;
+            transition: all 0.2s ease;
+        }
+
+        .close-settings:hover {
+            background: #2a2a2a;
+            color: #fff;
+        }
+
+        .settings-content {
+            padding: 32px;
+        }
+
+        .setting-group {
+            margin-bottom: 28px;
+        }
+
+        .setting-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #888;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .setting-select {
+            width: 100%;
+            padding: 14px 18px;
+            border: 1px solid #333;
+            border-radius: 10px;
+            font-size: 14px;
+            background: #1a1a1a;
+            color: #ffffff;
+            outline: none;
+            transition: border-color 0.2s ease;
+            cursor: pointer;
+        }
+
+        .setting-select:focus {
+            border-color: #4ecdc4;
+            box-shadow: 0 0 15px rgba(78, 205, 196, 0.2);
+        }
+
+        .setting-help {
+            font-size: 12px;
+            color: #666;
+            margin-top: 6px;
+            line-height: 1.4;
+        }
+
+        /* Welcome */
+        .welcome-message {
+            text-align: center;
+            padding: 80px 32px;
+            color: #888;
+        }
+
+        .welcome-icon {
+            font-size: 64px;
+            margin-bottom: 28px;
+            background: linear-gradient(135deg, #ff6b6b, #4ecdc4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .welcome-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 16px;
+            letter-spacing: -0.5px;
+        }
+
+        .welcome-subtitle {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #888;
+            max-width: 480px;
+            margin: 0 auto;
+        }
+
+        /* Typing Indicator */
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 18px 22px;
+            background: #121212;
+            border-radius: 16px 16px 16px 4px;
+            margin-right: 60px;
+            border: 1px solid #2a2a2a;
+        }
+
+        .typing-dot {
+            width: 6px;
+            height: 6px;
+            background: #666;
+            border-radius: 50%;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(1) { animation-delay: 0.0s; }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typing {
+            0%, 60%, 100% { transform: scale(0.8); opacity: 0.5; }
+            30% { transform: scale(1.2); opacity: 1; }
+        }
+
+        /* Scrollbar */
+        .messages-area::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .messages-area::-webkit-scrollbar-track {
+            background: #1a1a1a;
+        }
+
+        .messages-area::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 3px;
+        }
+
+        .messages-area::-webkit-scrollbar-thumb:hover {
+            background: #444;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header {
+                padding: 0 20px;
+            }
+
+            .reading-styles {
+                padding: 0 20px;
+            }
+
+            .messages-area {
+                padding: 20px;
+            }
+
+            .input-area {
+                padding: 20px;
+            }
+
+            .message.user .message-content {
+                margin-left: 40px;
+            }
+
+            .message.bot .message-content {
+                margin-right: 40px;
+            }
+
+            .settings-sidebar {
+                width: 100vw;
+                right: -100vw;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="loading-screen" class="loading-screen">
+        <div class="loading-content">
+            <div class="om-symbol">🕉️</div>
+            <div class="loading-text">Connecting to Divine Wisdom...</div>
+        </div>
+    </div>
+
+    <div id="app" class="app">
+        <div class="header">
+            <div class="logo-section">
+                <div class="logo">🕉️ Spiritual Wisdom</div>
+                <div class="status-badge">Online</div>
+            </div>
+            <button class="settings-btn" id="settings-btn">⚙</button>
+        </div>
+
+        <div class="reading-styles">
+            <div class="style-tabs">
+                <button class="style-tab" data-style="deep">Deep</button>
+                <button class="style-tab active" data-style="balanced">Balanced</button>
+                <button class="style-tab" data-style="practical">Practical</button>
+            </div>
+        </div>
+
+        <div class="messages-area" id="messages-area">
+            <div class="welcome-message">
+                <div class="welcome-icon">🕉️</div>
+                <div class="welcome-title">Welcome to Spiritual Wisdom</div>
+                <div class="welcome-subtitle">Your AI guide for spiritual questions and ancient wisdom. Ask anything about life, dharma, meditation, or spiritual growth.</div>
+            </div>
+        </div>
+
+        <div class="input-area">
+            <div class="input-container">
+                <textarea 
+                    id="message-input" 
+                    class="message-input" 
+                    placeholder="Ask your spiritual question..."
+                    rows="1"
+                ></textarea>
+                <button id="send-button" class="send-button">↗</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="settings-sidebar" class="settings-sidebar">
+        <div class="settings-header">
+            <div class="settings-title">Settings</div>
+            <button id="close-settings" class="close-settings">×</button>
+        </div>
+        
+        <div class="settings-content">
+            <div class="setting-group">
+                <label class="setting-label">AI Model</label>
+                <select id="model-select" class="setting-select">
+                    <option value="gpt-4.1">GPT-4.1</option>
+                    <option value="o3-mini">o3 mini</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        setTimeout(() => {
+            document.getElementById('loading-screen').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('loading-screen').style.display = 'none';
+                document.getElementById('app').style.display = 'block';
+            }, 1000);
+        }, 2500);
+
+        document.getElementById('settings-btn').addEventListener('click', () => {
+            document.getElementById('settings-sidebar').classList.add('open');
+        });
+
+        document.getElementById('close-settings').addEventListener('click', () => {
+            document.getElementById('settings-sidebar').classList.remove('open');
+        });
+
+        document.getElementById('send-button').addEventListener('click', () => {
+            const input = document.getElementById('message-input');
+            const message = input.value.trim();
+            if (message) {
+                addMessage(message, 'user');
+                input.value = '';
+                showTypingIndicator();
+                setTimeout(() => {
+                    hideTypingIndicator();
+                    addMessage('Om! Your question touches the heart of spiritual wisdom.', 'bot');
+                }, 2000);
+            }
+        });
+
+        function addMessage(text, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            
+            const avatar = document.createElement('div');
+            avatar.className = `avatar ${sender}-avatar`;
+            avatar.textContent = sender === 'user' ? 'Y' : '🕉️';
+            
+            const content = document.createElement('div');
+            content.className = 'message-content';
+            content.textContent = text;
+            
+            messageDiv.appendChild(avatar);
+            messageDiv.appendChild(content);
+            
+            const welcome = document.getElementById('messages-area').querySelector('.welcome-message');
+            if (welcome) welcome.remove();
+            
+            document.getElementById('messages-area').appendChild(messageDiv);
+            document.getElementById('messages-area').scrollTop = document.getElementById('messages-area').scrollHeight;
+        }
+
+        function showTypingIndicator() {
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'message bot';
+            typingDiv.id = 'typing-indicator';
+            
+            const avatar = document.createElement('div');
+            avatar.className = 'avatar bot-avatar';
+            avatar.textContent = '🕉️';
+            
+            const indicator = document.createElement('div');
+            indicator.className = 'typing-indicator';
+            indicator.innerHTML = '<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
+            
+            typingDiv.appendChild(avatar);
+            typingDiv.appendChild(indicator);
+            
+            document.getElementById('messages-area').appendChild(typingDiv);
+            document.getElementById('messages-area').scrollTop = document.getElementById('messages-area').scrollHeight;
+        }
+
+        function hideTypingIndicator() {
+            const typing = document.getElementById('typing-indicator');
+            if (typing) typing.remove();
+        }
+
+        document.querySelectorAll('.style-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.style-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

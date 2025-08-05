@@ -1,0 +1,22 @@
+chunking_task:
+  description: "Process documents and create chunks while preserving verse structure"
+  expected_output: "A list of well-formed document chunks"
+  agent: "chunking_agent"
+  async_execution: false
+  priority: 1
+  context: >
+    Process spiritual documents from the Documents directory. Extract text content and create
+    meaningful chunks that maintain the integrity of Sanskrit and English verses.
+    Each chunk should be of appropriate size for embeddings (typically 1000-1500 tokens),
+    but should prioritize keeping verses intact rather than strict token limits.
+
+verification_task:
+  description: "Verify the quality and integrity of document chunks"
+  expected_output: "Verification report on chunk quality and corrected chunks if needed"
+  agent: "verification_agent"
+  async_execution: false
+  priority: 2
+  context: >
+    Review the chunks created by the chunking agent. Verify that verses are preserved intact,
+    chunks have appropriate context, and the overall quality is suitable for efficient
+    retrieval and question answering. Flag any issues and provide corrections if needed.

@@ -1,0 +1,132 @@
+{
+  "basic": {
+    "status": "success",
+    "model": "o3-mini-2025-01-31",
+    "content": "2 + 2 equals 4. When you add 2 and 2, you're combining two sets of two objects, which totals four objects.",
+    "usage": {
+      "completion_tokens": 107,
+      "prompt_tokens": 26,
+      "total_tokens": 133,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 64,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 0
+      }
+    },
+    "response_time": 2.23
+  },
+  "reasoning_effort": {
+    "low": {
+      "status": "success",
+      "content": "Let\u2019s break down the logic:\n\n1. Premise 1: All roses are flowers. This means every rose is included in the set of flowers.\n\n2. Premise 2: Some flowers are red. This means there exists at least one red flower.\n\n3. To conclude \"Some roses are red,\" we would need to show that the red flower(s) mentioned in the second premise are actually among the roses.\n\n4. However, while all roses are flowers, the red flowers mentioned might belong to any category of flowers (e.g., tulips, daisies, etc.) that are not roses. The premises don\u2019t provide any connection between red flowers and roses; they only state that some members of the flower category are red.\n\n5. Therefore, from the given premises, it is logically possible that the red flowers are not roses at all. Because we can have the situation where no rose is red even though some flowers are red, the conclusion \"Some roses are red\" does not necessarily follow.\n\nIn summary, without additional information linking red to roses specifically, we cannot infer that some roses are red based solely on the two premises provided.",
+      "usage": {
+        "completion_tokens": 318,
+        "prompt_tokens": 45,
+        "total_tokens": 363,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": 0,
+          "audio_tokens": 0,
+          "reasoning_tokens": 64,
+          "rejected_prediction_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "audio_tokens": 0,
+          "cached_tokens": 0
+        }
+      },
+      "response_time": 5.13,
+      "reasoning_tokens": null
+    },
+    "medium": {
+      "status": "success",
+      "content": "Step 1: Understand the Premises\n\u2022 Premise 1: All roses are flowers. This means every rose is included in the category of flowers.\n\u2022 Premise 2: Some flowers are red. This means that within the group of flowers, there is at least one red flower.\n\nStep 2: Analyze the Implications of the Premises\n\u2022 Although every rose is a flower, the statement \"some flowers are red\" only tells us that there exists at least one red flower; it does not indicate which type of flower it is.\n\u2022 The red flowers mentioned in Premise 2 could be any flowers, such as tulips, daisies, or others, and do not necessarily have to be roses.\n\nStep 3: Consider",
+      "usage": {
+        "completion_tokens": 500,
+        "prompt_tokens": 45,
+        "total_tokens": 545,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": 0,
+          "audio_tokens": 0,
+          "reasoning_tokens": 323,
+          "rejected_prediction_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "audio_tokens": 0,
+          "cached_tokens": 0
+        }
+      },
+      "response_time": 5.06,
+      "reasoning_tokens": null
+    },
+    "high": {
+      "status": "success",
+      "content": "",
+      "usage": {
+        "completion_tokens": 500,
+        "prompt_tokens": 45,
+        "total_tokens": 545,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": 0,
+          "audio_tokens": 0,
+          "reasoning_tokens": 500,
+          "rejected_prediction_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "audio_tokens": 0,
+          "cached_tokens": 0
+        }
+      },
+      "response_time": 4.57,
+      "reasoning_tokens": null
+    }
+  },
+  "unsupported_params": [
+    {
+      "parameter": "temperature",
+      "supported": false,
+      "error": "Error code: 400 - {'error': {'message': \"Unsupported parameter: 'temperature' is not supported with this model.\", 'type': 'invalid_request_error', 'param': 'temperature', 'code': 'unsupported_parameter'}}"
+    },
+    {
+      "parameter": "top_p",
+      "supported": false,
+      "error": "Error code: 400 - {'error': {'message': \"Unsupported parameter: 'top_p' is not supported with this model.\", 'type': 'invalid_request_error', 'param': 'top_p', 'code': 'unsupported_parameter'}}"
+    },
+    {
+      "parameter": "frequency_penalty",
+      "supported": false,
+      "error": "Error code: 400 - {'error': {'message': \"Unsupported parameter: 'frequency_penalty' is not supported with this model.\", 'type': 'invalid_request_error', 'param': 'frequency_penalty', 'code': 'unsupported_parameter'}}"
+    }
+  ],
+  "spiritual_query": {
+    "status": "success",
+    "content": "In our modern work life, the principle of detached action means dedicating yourself wholeheartedly to your tasks while releasing the grip of personal expectations and the need for external rewards. This idea doesn\u2019t require you to be indifferent or un-committed; rather, it encourages a mindful commitment where your attention is fully on the quality of your work and the present moment rather than the end result.\n\nConsider these perspectives when applying detached action:\n\n1. Focus on Your Responsibilities: Approach your daily tasks with sincerity and diligence. Just as Arjuna was urged to act according to his nature, allow your unique skills and passions to manifest in your work. When you concentrate on doing the best you can, your work becomes a natural expression of your inner self or dharma.\n\n2. Let Go of the Outcome: Often in the corporate or creative world, success or failure becomes the measure of worth. Detached action invites you to release this fixation on the future. Instead, direct your energy toward the process itself. When you prioritize the quality and integrity of your actions over the fear of outcomes, you free yourself from stress and anxiety, cultivating a sense of inner peace.\n\n3. Embrace the Present: By immersing yourself in the moment rather than worrying about what lies ahead, you cultivate mindfulness. This mindfulness creates room for innovation, creative problem-solving, and a deeper satisfaction from your work\u2014even if external recognition isn\u2019t immediate or certain.\n\n4. Surrender the Results: In many spiritual teachings, including the Bhagavad Gita, there\u2019s a notion of offering your best work to something larger than yourself\u2014whether that be the collective good, the universe, or your own higher purpose. This act of surrender doesn\u2019t diminish your efforts; rather, it transforms work into an act of selflessness and inner joy. It reminds you that while control over the outcome is limited, your integrity and presence in the action are always within your influence.\n\n5. Cultivate Balance: In practical terms, detached action encourages a balanced approach to work and life. When you\u2019re not overly entangled with the results, you\u2019re less likely to burn out. This balance allows you to enjoy the journey, learn from every experience, and maintain emotional resilience even in challenging times.\n\nBy integrating these practices into your work life, you transform routine duties into a form of meditative practice\u2014a way to express your unique role in the larger tapestry of life. Detached action becomes a path to discovering deeper satisfaction, creativity, and peace, regardless of external circumstances.",
+    "usage": {
+      "completion_tokens": 639,
+      "prompt_tokens": 113,
+      "total_tokens": 752,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 128,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 0
+      }
+    },
+    "response_time": 5.99,
+    "reasoning_tokens": null
+  },
+  "streaming": {
+    "status": "success",
+    "streaming_supported": true,
+    "content": "1. Find a quiet, comfortable space: Sit or lie down in a relaxed position, ensuring minimal distractions, and set aside a few uninterrupted minutes.\n\n2. Focus on your breathing: Close your eyes, breathe slowly, and pay attention to the sensation of air entering and leaving your body, gently guiding your focus back to your breath when thoughts occur.\n\n3. Observe your thoughts non-judgmentally: Let thoughts and feelings arise naturally without engaging them, acknowledge them, and then return your focus to your breathing, gradually cultivating a sense of calm and awareness.",
+    "response_time": 2.23
+  }
+}

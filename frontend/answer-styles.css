@@ -1,0 +1,212 @@
+/* Enhanced Spiritual Answer Formatting Styles */
+
+/* Question display styling */
+.question-display {
+    margin-bottom: var(--space-md);
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: var(--radius-md);
+    padding: var(--space-md);
+}
+
+.question-label {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-bottom: var(--space-xs);
+}
+
+.question-label i {
+    margin-right: 5px;
+}
+
+.question-text {
+    font-weight: 500;
+    font-size: 1.1rem;
+    font-family: var(--font-serif);
+    font-style: italic;
+    color: var(--text-primary);
+}
+
+/* Divider styling */
+.divider {
+    position: relative;
+    text-align: center;
+    margin: var(--space-lg) 0;
+    height: 1px;
+    background-color: var(--border-light);
+}
+
+.divider span {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--bg-card);
+    padding: 0 var(--space-md);
+    font-size: 1.2rem;
+    color: var(--primary-color);
+}
+
+/* Quote styling */
+.quote {
+    color: var(--secondary-color);
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 500;
+}
+
+/* Sanskrit term highlighting */
+.sanskrit-term {
+    color: var(--primary-color);
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-color: var(--accent-color);
+    text-decoration-thickness: 2px;
+    text-decoration-style: dotted;
+    text-underline-offset: 3px;
+    padding: 0 2px;
+}
+
+/* Verse reference styling */
+.verse-reference {
+    background-color: rgba(139, 69, 19, 0.1);
+    color: var(--primary-color);
+    font-weight: 600;
+    padding: 1px 5px;
+    border-radius: var(--radius-sm);
+    white-space: nowrap;
+}
+
+/* Enhanced paragraph spacing in responses */
+.guidance-response p {
+    margin-bottom: var(--space-lg);
+    line-height: 1.8;
+}
+
+.guidance-response p:last-child {
+    margin-bottom: 0;
+}
+
+/* Source item styling */
+#sources-list li {
+    margin-bottom: var(--space-sm);
+    padding: var(--space-sm) var(--space-md);
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: var(--radius-sm);
+    border-left: 3px solid var(--primary-light);
+}
+
+/* Practice item styling */
+#practices-list li {
+    display: flex;
+    align-items: center;
+    margin-bottom: var(--space-sm);
+}
+
+#practices-list li i {
+    margin-right: var(--space-sm);
+    color: var(--secondary-color);
+    min-width: 16px;
+}
+
+/* Teaching item styling */
+#teachings-list li {
+    display: flex;
+    align-items: center;
+    margin-bottom: var(--space-sm);
+}
+
+#teachings-list li i {
+    margin-right: var(--space-sm);
+    color: var(--accent-color);
+    min-width: 16px;
+}
+
+/* Metadata styling */
+.guidance-metadata {
+    margin-top: var(--space-lg);
+    padding-top: var(--space-lg);
+    border-top: 1px solid var(--border-light);
+}
+
+.guidance-type {
+    display: inline-block;
+    background-color: rgba(255, 140, 0, 0.1);
+    color: var(--secondary-color);
+    padding: 2px 8px;
+    border-radius: var(--radius-sm);
+    font-size: 0.9rem;
+    margin-bottom: var(--space-md);
+}
+
+.guidance-type i {
+    margin-right: 5px;
+}
+
+/* Improve response meta formatting */
+.response-meta {
+    display: flex;
+    gap: var(--space-md);
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.model-used {
+    display: inline-flex;
+    align-items: center;
+}
+
+.model-used::before {
+    content: '\f544'; /* fa-brain */
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;
+    margin-right: 4px;
+}
+
+.response-time {
+    display: inline-flex;
+    align-items: center;
+}
+
+.response-time::before {
+    content: '\f017'; /* fa-clock */
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;
+    margin-right: 4px;
+}
+
+/* Dark mode adjustments */
+[data-theme="dark"] .verse-reference {
+    background-color: rgba(255, 215, 0, 0.1);
+}
+
+[data-theme="dark"] #sources-list li {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-left-color: var(--accent-color);
+}
+
+[data-theme="dark"] .guidance-type {
+    background-color: rgba(255, 215, 0, 0.1);
+}
+
+/* Animated highlight effect for answers */
+@keyframes highlight-fade {
+    0% { background-color: rgba(255, 215, 0, 0.2); }
+    100% { background-color: transparent; }
+}
+
+.guidance-response p {
+    animation: highlight-fade 2s ease-out;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .guidance-response p {
+        line-height: 1.6;
+        margin-bottom: var(--space-md);
+    }
+    
+    .guidance-metadata {
+        margin-top: var(--space-md);
+        padding-top: var(--space-md);
+    }
+}

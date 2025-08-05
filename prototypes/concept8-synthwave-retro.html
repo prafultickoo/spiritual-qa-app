@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🕉️ Spiritual Wisdom - Synthwave</title>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Orbitron', monospace;
+            background: 
+                linear-gradient(135deg, #0f0f23 0%, #1a0a2e 50%, #533a7d 100%),
+                radial-gradient(ellipse at top, #ff00ff22 0%, transparent 50%);
+            min-height: 100vh;
+            color: #ffffff;
+            overflow: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 255, 255, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 255, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a0a2e 50%, #533a7d 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: opacity 1s ease-out;
+        }
+
+        .loading-content {
+            text-align: center;
+            padding: 60px 40px;
+            border: 2px solid #00ffff;
+            border-radius: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            box-shadow: 0 0 40px #00ffff44;
+        }
+
+        .om-symbol {
+            font-size: 72px;
+            margin-bottom: 28px;
+            color: #00ffff;
+            text-shadow: 0 0 40px #00ffff;
+            animation: neonPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes neonPulse {
+            0%, 100% { text-shadow: 0 0 20px #00ffff; }
+            50% { text-shadow: 0 0 60px #00ffff; }
+        }
+
+        .loading-text {
+            font-size: 14px;
+            color: #ff00ff;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            text-shadow: 0 0 10px #ff00ff;
+        }
+
+        .app {
+            display: none;
+            height: 100vh;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header {
+            height: 80px;
+            background: rgba(0, 0, 0, 0.8);
+            border-bottom: 2px solid #00ffff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 900;
+            color: #00ffff;
+            text-shadow: 0 0 20px #00ffff;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .status-badge {
+            background: linear-gradient(45deg, #ff00ff, #00ffff);
+            color: #000;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 6px 12px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .settings-btn {
+            width: 50px;
+            height: 50px;
+            border: 2px solid #ff00ff;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: #ff00ff;
+            transition: all 0.3s ease;
+        }
+
+        .settings-btn:hover {
+            box-shadow: 0 0 30px #ff00ff;
+            transform: scale(1.1);
+        }
+
+        .reading-styles {
+            height: 70px;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .style-tabs {
+            display: flex;
+            gap: 8px;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 25px;
+            padding: 8px;
+            border: 1px solid #00ffff;
+        }
+
+        .style-tab {
+            padding: 12px 24px;
+            font-size: 12px;
+            font-weight: 700;
+            font-family: 'Orbitron', monospace;
+            color: #00ffff;
+            background: transparent;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+
+        .style-tab.active {
+            background: linear-gradient(45deg, #ff00ff, #00ffff);
+            color: #000;
+        }
+
+        .messages-area {
+            height: calc(100vh - 80px - 70px - 120px);
+            overflow-y: auto;
+            padding: 32px;
+        }
+
+        .message {
+            margin-bottom: 32px;
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+        }
+
+        .message.user {
+            justify-content: flex-end;
+        }
+
+        .avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            border: 2px solid;
+        }
+
+        .user-avatar {
+            background: linear-gradient(45deg, #ff00ff, #ff0080);
+            border-color: #ff00ff;
+            color: white;
+            order: 1;
+        }
+
+        .bot-avatar {
+            background: linear-gradient(45deg, #00ffff, #0080ff);
+            border-color: #00ffff;
+            color: white;
+        }
+
+        .message-content {
+            max-width: 60%;
+            padding: 20px 24px;
+            border-radius: 20px;
+            font-size: 14px;
+            line-height: 1.7;
+            backdrop-filter: blur(10px);
+            border: 1px solid;
+        }
+
+        .message.user .message-content {
+            background: rgba(255, 0, 255, 0.2);
+            color: #ffffff;
+            border-color: #ff00ff;
+            border-radius: 20px 20px 5px 20px;
+            margin-left: 80px;
+        }
+
+        .message.bot .message-content {
+            background: rgba(0, 255, 255, 0.2);
+            color: #ffffff;
+            border-color: #00ffff;
+            border-radius: 20px 20px 20px 5px;
+            margin-right: 80px;
+        }
+
+        .om-greeting {
+            font-weight: 900;
+            color: #00ffff;
+            text-shadow: 0 0 15px #00ffff;
+        }
+
+        .input-area {
+            height: 120px;
+            background: rgba(0, 0, 0, 0.8);
+            border-top: 2px solid #00ffff;
+            padding: 24px 32px;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-container {
+            width: 100%;
+            position: relative;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 25px;
+            border: 2px solid #00ffff;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .input-container:focus-within {
+            border-color: #ff00ff;
+            box-shadow: 0 0 30px rgba(255, 0, 255, 0.5);
+        }
+
+        .message-input {
+            width: 100%;
+            min-height: 60px;
+            padding: 20px 80px 20px 24px;
+            border: none;
+            background: transparent;
+            font-family: 'Orbitron', monospace;
+            font-size: 14px;
+            resize: none;
+            outline: none;
+            color: #ffffff;
+        }
+
+        .message-input::placeholder {
+            color: #888888;
+        }
+
+        .send-button {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 50px;
+            height: 50px;
+            border: 2px solid #ff00ff;
+            background: linear-gradient(45deg, #ff00ff, #00ffff);
+            color: #000;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 900;
+            transition: all 0.3s ease;
+        }
+
+        .send-button:hover {
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .settings-sidebar {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 400px;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.9);
+            border-left: 2px solid #ff00ff;
+            transition: right 0.4s ease;
+            z-index: 50;
+        }
+
+        .settings-sidebar.open {
+            right: 0;
+        }
+
+        .settings-header {
+            height: 80px;
+            padding: 0 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .settings-title {
+            font-size: 20px;
+            font-weight: 900;
+            color: #00ffff;
+            text-shadow: 0 0 15px #00ffff;
+            text-transform: uppercase;
+        }
+
+        .close-settings {
+            width: 40px;
+            height: 40px;
+            border: 2px solid #ff00ff;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ff00ff;
+            transition: all 0.3s ease;
+        }
+
+        .settings-content {
+            padding: 32px;
+        }
+
+        .setting-group {
+            margin-bottom: 32px;
+        }
+
+        .setting-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            color: #00ffff;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .setting-select {
+            width: 100%;
+            padding: 16px 20px;
+            border: 2px solid #00ffff;
+            border-radius: 15px;
+            font-family: 'Orbitron', monospace;
+            background: rgba(0, 0, 0, 0.8);
+            color: #ffffff;
+            outline: none;
+        }
+
+        .welcome-message {
+            text-align: center;
+            padding: 80px 32px;
+        }
+
+        .welcome-icon {
+            font-size: 80px;
+            margin-bottom: 32px;
+            color: #00ffff;
+            text-shadow: 0 0 60px #00ffff;
+        }
+
+        .welcome-title {
+            font-size: 32px;
+            font-weight: 900;
+            color: #ffffff;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .welcome-subtitle {
+            font-size: 16px;
+            color: #cccccc;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 20px 24px;
+            background: rgba(0, 255, 255, 0.2);
+            border: 1px solid #00ffff;
+            border-radius: 20px 20px 20px 5px;
+            margin-right: 80px;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: #00ffff;
+            border-radius: 50%;
+            animation: typingGlow 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(1) { animation-delay: 0.0s; }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typingGlow {
+            0%, 60%, 100% { transform: scale(0.8); }
+            30% { transform: scale(1.3); }
+        }
+    </style>
+</head>
+<body>
+    <div id="loading-screen" class="loading-screen">
+        <div class="loading-content">
+            <div class="om-symbol">🕉️</div>
+            <div class="loading-text">Initializing Neural Link...</div>
+        </div>
+    </div>
+
+    <div id="app" class="app">
+        <div class="header">
+            <div class="logo-section">
+                <div class="logo">🕉️ Spiritual Nexus</div>
+                <div class="status-badge">Online</div>
+            </div>
+            <button class="settings-btn" id="settings-btn">⚙</button>
+        </div>
+
+        <div class="reading-styles">
+            <div class="style-tabs">
+                <button class="style-tab" data-style="deep">Deep</button>
+                <button class="style-tab active" data-style="balanced">Balanced</button>
+                <button class="style-tab" data-style="practical">Practical</button>
+            </div>
+        </div>
+
+        <div class="messages-area" id="messages-area">
+            <div class="welcome-message">
+                <div class="welcome-icon">🕉️</div>
+                <div class="welcome-title">Spiritual Nexus</div>
+                <div class="welcome-subtitle">Connect to the digital dharma matrix. Ask questions about consciousness, reality, and spiritual awakening.</div>
+            </div>
+        </div>
+
+        <div class="input-area">
+            <div class="input-container">
+                <textarea 
+                    id="message-input" 
+                    class="message-input" 
+                    placeholder="Enter your query into the spiritual matrix..."
+                    rows="1"
+                ></textarea>
+                <button id="send-button" class="send-button">↗</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="settings-sidebar" class="settings-sidebar">
+        <div class="settings-header">
+            <div class="settings-title">Neural Config</div>
+            <button id="close-settings" class="close-settings">×</button>
+        </div>
+        
+        <div class="settings-content">
+            <div class="setting-group">
+                <label class="setting-label">AI Matrix</label>
+                <select id="model-select" class="setting-select">
+                    <option value="gpt-4.1">GPT-4.1 Prime</option>
+                    <option value="o3-mini">o3 Neural Core</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        setTimeout(() => {
+            document.getElementById('loading-screen').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('loading-screen').style.display = 'none';
+                document.getElementById('app').style.display = 'block';
+            }, 1000);
+        }, 3000);
+
+        document.getElementById('settings-btn').addEventListener('click', () => {
+            document.getElementById('settings-sidebar').classList.add('open');
+        });
+
+        document.getElementById('close-settings').addEventListener('click', () => {
+            document.getElementById('settings-sidebar').classList.remove('open');
+        });
+
+        document.getElementById('send-button').addEventListener('click', () => {
+            const input = document.getElementById('message-input');
+            const message = input.value.trim();
+            if (message) {
+                addMessage(message, 'user');
+                input.value = '';
+                showTypingIndicator();
+                setTimeout(() => {
+                    hideTypingIndicator();
+                    addMessage('Om! The digital dharma flows through infinite neural pathways.', 'bot');
+                }, 2500);
+            }
+        });
+
+        function addMessage(text, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            
+            const avatar = document.createElement('div');
+            avatar.className = `avatar ${sender}-avatar`;
+            avatar.textContent = sender === 'user' ? 'U' : '🕉️';
+            
+            const content = document.createElement('div');
+            content.className = 'message-content';
+            content.innerHTML = text.replace(/^Om!/, '<span class="om-greeting">Om!</span>');
+            
+            messageDiv.appendChild(avatar);
+            messageDiv.appendChild(content);
+            
+            const welcome = document.getElementById('messages-area').querySelector('.welcome-message');
+            if (welcome) welcome.remove();
+            
+            document.getElementById('messages-area').appendChild(messageDiv);
+            document.getElementById('messages-area').scrollTop = document.getElementById('messages-area').scrollHeight;
+        }
+
+        function showTypingIndicator() {
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'message bot';
+            typingDiv.id = 'typing-indicator';
+            
+            const avatar = document.createElement('div');
+            avatar.className = 'avatar bot-avatar';
+            avatar.textContent = '🕉️';
+            
+            const indicator = document.createElement('div');
+            indicator.className = 'typing-indicator';
+            indicator.innerHTML = '<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
+            
+            typingDiv.appendChild(avatar);
+            typingDiv.appendChild(indicator);
+            
+            document.getElementById('messages-area').appendChild(typingDiv);
+            document.getElementById('messages-area').scrollTop = document.getElementById('messages-area').scrollHeight;
+        }
+
+        function hideTypingIndicator() {
+            const typing = document.getElementById('typing-indicator');
+            if (typing) typing.remove();
+        }
+
+        document.querySelectorAll('.style-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.style-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+            });
+        });
+    </script>
+</body>

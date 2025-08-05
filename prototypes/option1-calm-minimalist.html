@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🕉️ Spiritual Wisdom - Calm Minimalist Prototype</title>
+    
+    <!-- External Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #87CEEB 0%, #ffffff 100%);
+            min-height: 100vh;
+            color: #2F4F4F;
+        }
+
+        /* Loading Screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #87CEEB 0%, #ffffff 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: opacity 0.5s ease-out;
+        }
+
+        .loading-content {
+            text-align: center;
+        }
+
+        .om-symbol {
+            font-size: 80px;
+            color: #F4A460;
+            animation: pulse 2s infinite;
+            margin-bottom: 20px;
+        }
+
+        .loading-text {
+            color: #8B8B8B;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .loading-dots {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .loading-dots span {
+            width: 8px;
+            height: 8px;
+            background-color: #F4A460;
+            border-radius: 50%;
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+
+        .loading-dots span:nth-child(1) { animation-delay: -0.32s; }
+        .loading-dots span:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.7; }
+            50% { transform: scale(1.1); opacity: 1; }
+        }
+
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+
+        /* Chat Application */
+        .chat-app {
+            display: none;
+            max-width: 800px;
+            margin: 20px auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+            min-height: 80vh;
+        }
+
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            height: 80vh;
+        }
+
+        /* Chat Header */
+        .chat-header {
+            background: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: relative;
+        }
+
+        .settings-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 18px;
+        }
+
+        .settings-toggle:hover {
+            background: #20B2AA;
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .chat-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #2F4F4F;
+            margin-bottom: 5px;
+        }
+
+        .chat-subtitle {
+            font-size: 14px;
+            color: #8B8B8B;
+        }
+
+        /* Reading Style Selector */
+        .style-selector {
+            padding: 20px;
+            background: white;
+            border-bottom: 1px solid #E0E0E0;
+        }
+
+        .style-options {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .style-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            border: 2px solid #E0E0E0;
+            background: white;
+        }
+
+        .style-option:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .style-option[data-style="deep"].active {
+            background: #E6F3FF;
+            border-color: #4169E1;
+            color: #4169E1;
+        }
+
+        .style-option[data-style="balanced"].active {
+            background: #E8F5E8;
+            border-color: #228B22;
+            color: #228B22;
+        }
+
+        .style-option[data-style="practical"].active {
+            background: #FFF4E6;
+            border-color: #FF8C00;
+            color: #FF8C00;
+        }
+
+        /* Chat Messages */
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: #fafafa;
+        }
+
+        .message {
+            margin-bottom: 16px;
+            display: flex;
+        }
+
+        .message.user {
+            justify-content: flex-end;
+        }
+
+        .message-content {
+            max-width: 70%;
+            padding: 12px 16px;
+            border-radius: 20px;
+            font-size: 16px;
+            line-height: 1.4;
+        }
+
+        .message.user .message-content {
+            background: linear-gradient(135deg, #20B2AA 0%, #48D1CC 100%);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message.bot .message-content {
+            background: white;
+            color: #2F4F4F;
+            border: 1px solid #E0E0E0;
+            border-bottom-left-radius: 4px;
+            max-width: 80%;
+        }
+
+        .om-greeting {
+            color: #F4A460;
+            font-weight: 600;
+        }
+
+        /* Chat Input Area */
+        .chat-input-area {
+            padding: 20px;
+            background: white;
+            border-top: 1px solid #E0E0E0;
+        }
+
+        .chat-form {
+            display: flex;
+            gap: 12px;
+            align-items: flex-end;
+        }
+
+        .chat-input {
+            flex: 1;
+            border: 1px solid #D3D3D3;
+            border-radius: 20px;
+            padding: 12px 16px;
+            font-size: 16px;
+            font-family: inherit;
+            resize: none;
+            min-height: 44px;
+            max-height: 120px;
+            transition: border-color 0.3s ease;
+        }
+
+        .chat-input:focus {
+            outline: none;
+            border-color: #20B2AA;
+            box-shadow: 0 0 0 3px rgba(32, 178, 170, 0.1);
+        }
+
+        .send-button {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: #20B2AA;
+            color: white;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .send-button:hover {
+            transform: scale(1.1);
+            background: #1e9e92;
+        }
+
+        /* Settings Panel */
+        .settings-panel {
+            position: fixed;
+            top: 0;
+            right: -320px;
+            width: 320px;
+            height: 100vh;
+            background: white;
+            box-shadow: -2px 0 20px rgba(0,0,0,0.1);
+            transition: right 0.3s ease;
+            z-index: 500;
+            overflow-y: auto;
+        }
+
+        .settings-panel.active {
+            right: 0;
+        }
+
+        .settings-header {
+            background: #20B2AA;
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .close-settings {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .settings-body {
+            padding: 20px;
+        }
+
+        .setting-group {
+            margin-bottom: 20px;
+        }
+
+        .setting-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #2F4F4F;
+        }
+
+        .setting-select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #D3D3D3;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+        }
+
+        .setting-select:focus {
+            outline: none;
+            border-color: #20B2AA;
+        }
+
+        .setting-help {
+            font-size: 12px;
+            color: #8B8B8B;
+            margin-top: 4px;
+        }
+
+        .slider {
+            width: 100%;
+            -webkit-appearance: none;
+            height: 6px;
+            border-radius: 5px;
+            background: #D3D3D3;
+            outline: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #20B2AA;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        /* Demo Messages */
+        .demo-message {
+            animation: fadeInUp 0.5s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .chat-app {
+                margin: 0;
+                border-radius: 0;
+                height: 100vh;
+            }
+
+            .chat-container {
+                height: 100vh;
+            }
+
+            .style-options {
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+
+            .style-option {
+                padding: 8px 12px;
+                font-size: 14px;
+            }
+
+            .settings-panel {
+                width: 100vw;
+                right: -100vw;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loading-content">
+            <div class="om-symbol">🕉️</div>
+            <div class="loading-text">Connecting to Divine Wisdom...</div>
+            <div class="loading-dots">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat Application -->
+    <div id="app" class="chat-app">
+        <div class="chat-container">
+            <!-- Chat Header -->
+            <div class="chat-header">
+                <div class="settings-toggle" id="settings-toggle" title="Settings">⚙️</div>
+                <div class="chat-title">🕉️ Spiritual Wisdom</div>
+                <div class="chat-subtitle">Your spiritual guide</div>
+            </div>
+            
+            <!-- Reading Style Selector -->
+            <div class="style-selector">
+                <div class="style-options">
+                    <div class="style-option" data-style="deep">
+                        <span>🔍</span>
+                        <span>Deep</span>
+                    </div>
+                    <div class="style-option active" data-style="balanced">
+                        <span>⚖️</span>
+                        <span>Balanced</span>
+                    </div>
+                    <div class="style-option" data-style="practical">
+                        <span>🎯</span>
+                        <span>Practical</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Chat Messages -->
+            <div class="chat-messages" id="chat-messages">
+                <!-- Demo Messages -->
+                <div class="message bot demo-message">
+                    <div class="message-content">
+                        <span class="om-greeting">Om!</span> Welcome to your spiritual journey. I'm here to guide you with wisdom from ancient texts. Feel free to ask any question about life, dharma, or spiritual growth.
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Chat Input -->
+            <div class="chat-input-area">
+                <form class="chat-form" id="wisdom-form">
+                    <textarea 
+                        id="wisdom-question"
+                        class="chat-input" 
+                        placeholder="Ask your spiritual question..."
+                        rows="1"
+                    ></textarea>
+                    <button type="submit" class="send-button">
+                        ➤
+                    </button>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Settings Panel -->
+        <div class="settings-panel" id="settings-panel">
+            <div class="settings-header">
+                <h3>⚙️ Settings</h3>
+                <button class="close-settings" id="close-settings">×</button>
+            </div>
+            
+            <div class="settings-body">
+                <div class="setting-group">
+                    <label>AI Model</label>
+                    <select class="setting-select">
+                        <option value="gpt-4.1">GPT-4.1</option>
+                        <option value="gpt-4o">GPT-4o</option>
+                        <option value="o3-mini">o3 mini (Reasoning) 🧠</option>
+                        <option value="claude-3-opus">Claude 3 Opus</option>
+                    </select>
+                </div>
+                
+                <div class="setting-group">
+                    <label>Processing Method (RAG Technique)</label>
+                    <select class="setting-select">
+                        <option value="stuff">📦 Stuff (Fast & Cheap)</option>
+                        <option value="refine">🔄 Refine (High Quality)</option>
+                        <option value="map_reduce">🗺️ Map-Reduce (Parallel)</option>
+                        <option value="map_rerank">🏆 Map-Rerank (Best Answer)</option>
+                        <option value="selective">🎯 Selective (Smart)</option>
+                    </select>
+                    <div class="setting-help">
+                        Different techniques offer trade-offs between speed, cost, and quality.
+                    </div>
+                </div>
+                
+                <div class="setting-group">
+                    <label for="k-parameter">Context Documents: <span id="k-value">10</span></label>
+                    <input type="range" id="k-parameter" min="3" max="15" value="10" class="slider">
+                </div>
+                
+                <div class="setting-group">
+                    <label for="diversity-parameter">Diversity: <span id="diversity-value">0.3</span></label>
+                    <input type="range" id="diversity-parameter" min="0" max="1" step="0.1" value="0.3" class="slider">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Loading screen logic
+        setTimeout(() => {
+            document.getElementById('loading-screen').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('loading-screen').style.display = 'none';
+                document.getElementById('app').style.display = 'block';
+            }, 500);
+        }, 2000);
+
+        // Settings panel toggle
+        document.getElementById('settings-toggle').addEventListener('click', () => {
+            document.getElementById('settings-panel').classList.add('active');
+        });
+
+        document.getElementById('close-settings').addEventListener('click', () => {
+            document.getElementById('settings-panel').classList.remove('active');
+        });
+
+        // Reading style selector
+        document.querySelectorAll('.style-option').forEach(option => {
+            option.addEventListener('click', () => {
+                document.querySelectorAll('.style-option').forEach(opt => opt.classList.remove('active'));
+                option.classList.add('active');
+            });
+        });
+
+        // Slider value updates
+        document.getElementById('k-parameter').addEventListener('input', (e) => {
+            document.getElementById('k-value').textContent = e.target.value;
+        });
+
+        document.getElementById('diversity-parameter').addEventListener('input', (e) => {
+            document.getElementById('diversity-value').textContent = e.target.value;
+        });
+
+        // Demo chat functionality
+        document.getElementById('wisdom-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const input = document.getElementById('wisdom-question');
+            const message = input.value.trim();
+            
+            if (message) {
+                // Add user message
+                addMessage(message, 'user');
+                input.value = '';
+                
+                // Simulate bot response after delay
+                setTimeout(() => {
+                    addMessage('Om! This is a demo response showing how your question would be answered with wisdom and guidance from the spiritual texts.', 'bot');
+                }, 1000);
+            }
+        });
+
+        function addMessage(text, type) {
+            const messagesContainer = document.getElementById('chat-messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type} demo-message`;
+            
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'message-content';
+            
+            if (type === 'bot' && text.startsWith('Om!')) {
+                contentDiv.innerHTML = `<span class="om-greeting">Om!</span>${text.substring(3)}`;
+            } else {
+                contentDiv.textContent = text;
+            }
+            
+            messageDiv.appendChild(contentDiv);
+            messagesContainer.appendChild(messageDiv);
+            
+            // Scroll to bottom
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        // Auto-resize textarea
+        document.getElementById('wisdom-question').addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+        });
+
+        // Enter to submit (Shift+Enter for new line)
+        document.getElementById('wisdom-question').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                document.getElementById('wisdom-form').dispatchEvent(new Event('submit'));
+            }
+        });
+    </script>
+</body>
+</html>

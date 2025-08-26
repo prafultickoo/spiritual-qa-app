@@ -312,6 +312,27 @@ class SpiritualChatApp {
             diversity: this.settings.diversity
         };
         
+        // Include conversation history for context-aware responses
+        if (this.conversationHistory && this.conversationHistory.length > 0) {
+            payload.conversation_history = [];
+            // Convert conversation history to the format expected by the backend
+            this.conversationHistory.forEach(item => {
+                // Add user question
+                payload.conversation_history.push({
+                    role: 'user',
+                    content: item.question,
+                    timestamp: item.timestamp
+                });
+                // Add assistant answer
+                payload.conversation_history.push({
+                    role: 'assistant',
+                    content: item.answer,
+                    timestamp: item.timestamp
+                });
+            });
+            console.log(`📝 Including ${payload.conversation_history.length} conversation history items`);
+        }
+        
         // Add reasoning_effort parameter for o3-mini model
         if (this.settings.model === 'o3-mini') {
             payload.reasoning_effort = this.settings.reasoning_effort;

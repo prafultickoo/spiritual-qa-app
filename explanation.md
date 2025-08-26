@@ -3,6 +3,117 @@
 ## Project Overview
 We're building a Spiritual Guide application that can read and process spiritual texts (including those with Sanskrit verses), store them in a vector database, and answer user queries using various LLM models. The system is designed with an agentic approach using the CrewAI framework.
 
+## Latest Updates - Port Mismatch Fix & Unified Startup (Aug 18, 2025)
+
+- Refactored `start_app.py` to allocate dynamic ports using `utils/network_utils.find_free_port()` and to start the backend with Uvicorn from `api/` (`spiritual_api:app`).
+- Created `utils/app_launcher_utils.py` with `write_frontend_config()` to generate `frontend/config.js` each run, pointing to the correct backend URL. One function, one task.
+- Frontend now always reads the correct backend URL from `frontend/config.js`, eliminating port mismatch.
+- Recommended startup: run `start_app.py` (or `launch_app.py`). Avoid opening `frontend/index.html` directly without the launcher.
+- GPT-5 remains fully supported end-to-end: listed in `/models`, selectable in the frontend, handled in `LLM_MODELS['gpt-5']` with `max_completion_tokens`.
+
+How to run
+```bash
+python start_app.py
+```
+
+Quick verification
+- App opens in browser; settings panel shows GPT-5 option.
+- Backend health: check logs for GET `/health` status ok.
+- Models: GET `/models` includes `gpt-5`.
+- Ask: select GPT-5 and ask a question; expect answer + sources.
+
+## Latest Updates - Centralized LLM Timeout (Aug 20, 2025)
+
+- Implemented centralized timeout wrappers in `utils/llm_timeout.py`:
+  - `call_chat_completion_with_timeout()` for synchronous calls
+  - `call_chat_completion_with_async_timeout()` for async calls
+- Refactored `utils/query_classifier.py` to use the sync wrapper for intent classification.
+- Refactored `utils/llm_integrations.py` to use the async wrapper for response generation.
+- Added `LLM_REQUEST_TIMEOUT` to `.env.template` (default 30 seconds).
+- All LLM calls now carry a `request_id` for improved logging and diagnostics.
+
+How to configure
+- Set `LLM_REQUEST_TIMEOUT` in your `.env` to control max wait time (seconds).
+- The wrappers raise `TimeoutError` on timeouts; callers handle this gracefully with fallbacks.
+- Always route new OpenAI chat completion calls through these wrappers to prevent hangs.
+
+### Testing the timeout wrappers
+- Unit-style tests were added in `tests/test_llm_timeout_wrappers.py` using a fake client (no network calls).
+- To run just these tests:
+
+```bash
+pytest -q tests/test_llm_timeout_wrappers.py
+```
+
+- Expected: slow fakes raise `TimeoutError`; fast fakes succeed and return a minimal response object.
+
+## Frontend Update - GPT-5 Temporarily Disabled (Aug 20, 2025)
+
+- Change: The `GPT-5` option in the model selector (`frontend/index.html`) is now disabled.
+- Reason: Temporary pause due to performance/investigation needs.
+- Default remains: `GPT-4.1`.
+- How to re-enable: Remove the `disabled` attribute from the GPT-5 `<option>` in `frontend/index.html`.
+
+## Latest Updates - GPT-5 Integration (August 16, 2025)
+
+### 🚀 GPT-5 Successfully Integrated as Default Model
+**Complete integration with GPT-5 as the primary AI model:**
+
+**Frontend Changes:**
+- Added GPT-5 option to model dropdown with ⭐ indicator
+- Set GPT-5 as default selected option in HTML (`selected` attribute)
+- Updated JavaScript settings to use 'gpt-5' as default model
+
+**Backend API Changes:**
+- Updated `spiritual_api.py` default model to "gpt-5"
+- Added GPT-5 to `LLM_MODELS` configuration with proper parameters
+- Updated parameter handling logic for GPT-5's requirements
+
+**Answer Generator Updates:**
+- Updated all default model parameters to "gpt-5"
+- Added special GPT-5 handling in `_create_llm_completion()` method
+- Fixed parameter structure: uses `max_completion_tokens`, no `temperature` support
+
+**Key GPT-5 API Requirements Discovered:**
+- ✅ Uses `max_completion_tokens` instead of `max_tokens`
+- ✅ Does not support custom `temperature` (uses default value 1)
+- ✅ Supports standard optional parameters (`top_p`, `frequency_penalty`, etc.)
+- ✅ Same message format as GPT-4
+
+**Testing Results:**
+- ✅ API integration successful 
+- ✅ High-quality spiritual responses with Sanskrit quotes
+- ✅ Frontend dropdown working correctly
+- ✅ End-to-end integration verified
+
+**Performance Investigation & Optimization:**
+After testing, discovered GPT-5 has significant performance issues with RAG contexts:
+- **Direct GPT-5 API call**: 3.36 seconds (fast)
+- **GPT-5 with RAG context**: 40-70+ seconds (extremely slow)
+- **GPT-4.1 with same RAG context**: 7-8 seconds (normal)
+
+**Root Cause**: GPT-5 becomes extremely slow when processing large spiritual text contexts from the RAG pipeline, making it impractical for real-time use.
+
+**Solution Applied:**
+- Reverted default model back to GPT-4.1 for optimal user experience
+- Kept GPT-5 available as optional choice with "(Slower)" warning
+- Added context optimization for GPT-5 (reduced chunks from 5 to 3)
+- GPT-5 remains fully functional but with performance trade-offs
+
+## UI Improvements
+
+### Sanskrit Test Removal
+- Removed the Sanskrit rendering test that appeared when launching the app
+- The chat interface now starts clean without any test content
+- Provides a more professional user experience
+
+### Context-Aware Follow-up Queries Fix (Latest)
+- **Issue**: Follow-up queries like "Explain in bullet points please" were returning unrelated answers
+- **Root Cause**: Frontend was not sending conversation history to the backend API
+- **Solution**: Updated frontend `callSpiritualAPI()` to include conversation history in the payload
+- **Implementation**: Conversation history is now properly formatted with alternating user/assistant messages
+- **Result**: Context-aware follow-up queries now work correctly, enabling true conversational AI
+
 ## Current Implementation Status
 
 ### 1. Project Structure
@@ -519,4 +630,87 @@ cd tests
 python test_api_endpoints.py
 ```
 
-The system is now ready for spiritual seekers to ask questions and receive guidance from ancient wisdom texts! 
+The system is now ready for spiritual seekers to ask questions and receive guidance from ancient wisdom texts!
+
+---
+
+## Step 16: LLM Contextual Query Enhancement (IN PROGRESS)
+
+### Overview
+Implementing a sophisticated multi-stage pipeline to handle follow-up questions intelligently, enhancing ambiguous queries with conversation context while minimizing unnecessary LLM API calls.
+
+### Stage 1: Fast Heuristic Detection (COMPLETED)
+**File: `utils/conversation_context.py`**
+
+Implemented pattern-based detection for follow-up queries:
+- **Pronoun Detection**: Identifies "this", "that", "it", "these", etc.
+- **Reference Detection**: Spots "the same", "similar", "more about"
+- **Fragment Detection**: Catches incomplete sentences
+- **Conversational Patterns**: Recognizes follow-up indicators
+
+```python
+class ConversationContextProcessor:
+    def is_follow_up_query(query: str) -> bool:
+        # Fast pattern matching without LLM calls
+        # Returns True if query appears to be a follow-up
+```
+
+### Stage 2: Semantic Analysis (COMPLETED)
+**File: `utils/semantic_analyzer.py`**
+
+Deeper analysis for ambiguous queries using SpaCy NLP:
+- **Pronoun Resolution**: Maps pronouns to potential antecedents
+- **Topic Extraction**: Identifies key concepts from conversation
+- **Ambiguity Detection**: Measures query specificity
+- **Semantic Overlap**: Compares with previous exchanges
+
+```python
+class SemanticAnalyzer:
+    def analyze_ambiguity(query, conversation_history):
+        # NLP-based analysis without LLM
+        # Returns detailed ambiguity assessment
+```
+
+### Stage 3: LLM-Powered Intent Classification (COMPLETED)
+**File: `utils/query_classifier.py`**
+
+Sophisticated LLM-based classification using multi-shot learning:
+- **Intent Types**: reformatting, perspective_application, content_modification, information_expansion, etc.
+- **Action Routing**: Determines whether to use RAG, reformat previous, or apply new perspective
+- **Enhancement Decision**: Identifies if query needs context injection
+- **Explainable AI**: Provides reasoning for each classification
+
+```python
+class LLMQueryClassifier:
+    def classify_query_intent(query, conversation_history, llm_client):
+        # Multi-shot LLM classification
+        # Returns: {intent, action, needs_rag, enhancement_needed, explanation}
+```
+
+### Multi-Shot Examples Include:
+1. **Reformatting**: "Summarize this in 3 bullets"
+2. **Perspective Shift**: "Give corporate examples"
+3. **Content Modification**: "Explain without Sanskrit"
+4. **Information Expansion**: "Tell me more about this"
+5. **Comparison**: "How is this different from Buddhism?"
+6. **Application**: "How can I practice this daily?"
+
+### Key Design Decisions:
+
+1. **Staged Pipeline**: Only calls expensive LLM when necessary
+2. **Rollback Safety**: Git tags at each stage for easy reversion
+3. **Test Coverage**: Comprehensive tests for each stage
+4. **User Control**: Uses same LLM model as selected by user
+5. **Token Efficiency**: Uses full token allowance for quality
+
+### Testing Results:
+- ✅ Stage 1: All heuristic patterns correctly detected
+- ✅ Stage 2: Semantic analysis accurately identifies ambiguity
+- ✅ Stage 3: 100% classification accuracy on test scenarios
+
+### Next Steps:
+1. Integrate all stages into EnhancedDocumentRetriever
+2. Add query enhancement logic for ambiguous queries
+3. Implement action routing based on classification
+4. Add comprehensive error handling
+5. Put behind feature flag for safe rollout 

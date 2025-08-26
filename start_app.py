@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """
-Spiritual Q&A Application Launcher
----------------------------------
-This script launches both the backend API server and the frontend web server,
-allowing users to access the application via their web browser with a single click.
+Spiritual Q&A Application Launcher (Dynamic Ports)
+-------------------------------------------------
+Launches the backend API and frontend servers with dynamically allocated ports
+and generates the frontend config to prevent port mismatches.
 
 How to use:
-1. Simply double-click this file or run it from your terminal
-2. Your default web browser will automatically open to the application
-3. When done, close the terminal window or press Ctrl+C to stop the servers
+1. Run this file (double-click or via terminal).
+2. Your browser opens to the frontend URL.
+3. Press Ctrl+C to stop both servers.
 """
 
 import os
@@ -20,15 +20,13 @@ import threading
 import signal
 import platform
 
-# Get the absolute path to the project directory
+from utils.network_utils import find_free_port
+from utils.app_launcher_utils import write_frontend_config
+
+# Paths
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 FRONTEND_DIR = os.path.join(PROJECT_DIR, "frontend")
-BACKEND_DIR = os.path.join(PROJECT_DIR, "backend")
-
-# Configuration
-BACKEND_PORT = 8000
-FRONTEND_PORT = 8080
-APP_URL = f"http://localhost:{FRONTEND_PORT}"
+API_DIR = os.path.join(PROJECT_DIR, "api")
 
 # Terminal colors for better visibility
 class Colors:
@@ -46,11 +44,11 @@ if platform.system() == "Windows" and "TERM" not in os.environ:
         if not attr.startswith('__'):
             setattr(Colors, attr, '')
 
-# Global flag to track if servers are running
+# Global state
 running = True
 
 def display_banner():
-    """Display a welcome banner for the application"""
+    """Display a welcome banner for the application."""
     banner = f"""{Colors.HEADER}
     ╔═══════════════════════════════════════════════╗
     ║                                               ║
@@ -62,48 +60,55 @@ def display_banner():
     print(banner)
     print(f"{Colors.BLUE}Starting servers... Please wait.{Colors.ENDC}")
 
-def start_backend():
-    """Start the backend FastAPI server"""
-    os.chdir(PROJECT_DIR)
+def start_backend(backend_port: int) -> subprocess.Popen:
+    """Start the backend FastAPI server via Uvicorn in the api/ directory.
+
+    Args:
+        backend_port: Port to bind the backend server to.
+
+    Returns:
+        The subprocess handle for the backend server.
+    """
     try:
-        if platform.system() == "Windows":
-            return subprocess.Popen(
-                ["python", os.path.join(BACKEND_DIR, "main.py")],
-                creationflags=subprocess.CREATE_NEW_CONSOLE
-            )
-        else:
-            return subprocess.Popen(
-                ["python", os.path.join(BACKEND_DIR, "main.py")],
-                stdout=subprocess.PIPE,
-                stderr=subprocess.STDOUT,
-                universal_newlines=True
-            )
+        cmd = [
+            sys.executable, "-m", "uvicorn", "spiritual_api:app",
+            "--host", "0.0.0.0", "--port", str(backend_port)
+        ]
+        return subprocess.Popen(
+            cmd,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            universal_newlines=True,
+            cwd=API_DIR,
+        )
     except Exception as e:
         print(f"{Colors.FAIL}Error starting backend server: {e}{Colors.ENDC}")
         sys.exit(1)
 
-def start_frontend():
-    """Start the frontend HTTP server using Python's built-in server"""
-    os.chdir(FRONTEND_DIR)
+def start_frontend(frontend_port: int) -> subprocess.Popen:
+    """Start the frontend HTTP server using Python's built-in server.
+
+    Args:
+        frontend_port: Port to bind the frontend server to.
+
+    Returns:
+        The subprocess handle for the frontend server.
+    """
     try:
-        if platform.system() == "Windows":
-            return subprocess.Popen(
-                ["python", "-m", "http.server", str(FRONTEND_PORT)],
-                creationflags=subprocess.CREATE_NEW_CONSOLE
-            )
-        else:
-            return subprocess.Popen(
-                ["python", "-m", "http.server", str(FRONTEND_PORT)],
-                stdout=subprocess.PIPE,
-                stderr=subprocess.STDOUT,
-                universal_newlines=True
-            )
+        cmd = [sys.executable, "-m", "http.server", str(frontend_port)]
+        return subprocess.Popen(
+            cmd,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            universal_newlines=True,
+            cwd=FRONTEND_DIR,
+        )
     except Exception as e:
         print(f"{Colors.FAIL}Error starting frontend server: {e}{Colors.ENDC}")
         sys.exit(1)
 
-def log_output(process, prefix):
-    """Read and display the output from a process"""
+def log_output(process: subprocess.Popen, prefix: str) -> None:
+    """Stream and print process output with a prefix."""
     global running
     try:
         for line in iter(process.stdout.readline, ''):
@@ -115,65 +120,71 @@ def log_output(process, prefix):
         if running:
             print(f"{Colors.WARNING}Error reading {prefix} output: {e}{Colors.ENDC}")
 
-def signal_handler(sig, frame):
-    """Handle Ctrl+C to gracefully shut down servers"""
-    global running
-    running = False
-    print(f"\n{Colors.WARNING}Shutting down servers... Please wait.{Colors.ENDC}")
-    sys.exit(0)
-
-def open_browser():
-    """Open the web browser to the application URL"""
-    time.sleep(3)  # Wait for servers to start
-    print(f"{Colors.GREEN}Opening application in web browser: {APP_URL}{Colors.ENDC}")
-    webbrowser.open(APP_URL)
-
 def main():
-    """Main function to start the application"""
+    """Main function to start the application with dynamic ports and config."""
     display_banner()
-    
-    # Register signal handler for Ctrl+C
-    signal.signal(signal.SIGINT, signal_handler)
-    
-    # Start backend server
-    backend_process = start_backend()
-    print(f"{Colors.GREEN}✓ Backend server started on port {BACKEND_PORT}{Colors.ENDC}")
-    
-    # Start frontend server
-    frontend_process = start_frontend()
-    print(f"{Colors.GREEN}✓ Frontend server started on port {FRONTEND_PORT}{Colors.ENDC}")
-    
-    # Create log threads if not on Windows
-    if platform.system() != "Windows":
-        backend_log = threading.Thread(target=log_output, args=(backend_process, "Backend"))
-        backend_log.daemon = True
-        backend_log.start()
-        
-        frontend_log = threading.Thread(target=log_output, args=(frontend_process, "Frontend"))
-        frontend_log.daemon = True
-        frontend_log.start()
-    
+
+    # Allocate ports
+    backend_port = find_free_port()
+    frontend_port = find_free_port()
+    backend_url = f"http://localhost:{backend_port}"
+    frontend_url = f"http://localhost:{frontend_port}"
+
+    # Generate frontend config
+    write_frontend_config(FRONTEND_DIR, backend_url)
+    print(f"{Colors.GREEN}✓ Frontend config set to {backend_url}{Colors.ENDC}")
+
+    # Start servers
+    backend_process = start_backend(backend_port)
+    print(f"{Colors.GREEN}✓ Backend server started on port {backend_port}{Colors.ENDC}")
+
+    frontend_process = start_frontend(frontend_port)
+    print(f"{Colors.GREEN}✓ Frontend server started on port {frontend_port}{Colors.ENDC}")
+
+    # Log output (both platforms)
+    backend_log = threading.Thread(target=log_output, args=(backend_process, "Backend"), daemon=True)
+    backend_log.start()
+    frontend_log = threading.Thread(target=log_output, args=(frontend_process, "Frontend"), daemon=True)
+    frontend_log.start()
+
     # Open browser after short delay
-    browser_thread = threading.Thread(target=open_browser)
-    browser_thread.daemon = True
-    browser_thread.start()
-    
+    time.sleep(2)
+    print(f"{Colors.GREEN}Opening application in web browser: {frontend_url}{Colors.ENDC}")
+    webbrowser.open(frontend_url)
+
     print(f"{Colors.BLUE}Application is running!{Colors.ENDC}")
-    print(f"{Colors.BLUE}Access the app at: {APP_URL}{Colors.ENDC}")
+    print(f"{Colors.BLUE}Access the app at: {frontend_url}{Colors.ENDC}")
     print(f"{Colors.WARNING}Press Ctrl+C to stop the servers when done.{Colors.ENDC}")
-    
+
+    # Graceful shutdown with Ctrl+C
+    def shutdown(signum=None, frame=None):
+        global running
+        running = False
+        print(f"\n{Colors.WARNING}Shutting down servers... Please wait.{Colors.ENDC}")
+        try:
+            if backend_process:
+                backend_process.terminate()
+            if frontend_process:
+                frontend_process.terminate()
+            if backend_process:
+                backend_process.wait(timeout=10)
+            if frontend_process:
+                frontend_process.wait(timeout=10)
+        except Exception:
+            pass
+        finally:
+            print(f"{Colors.GREEN}Servers shut down gracefully.{Colors.ENDC}")
+            sys.exit(0)
+
+    signal.signal(signal.SIGINT, shutdown)
+    signal.signal(signal.SIGTERM, shutdown)
+
+    # Keep alive
     try:
-        # Keep the main thread alive to monitor Ctrl+C
         while running:
-            time.sleep(0.1)
+            time.sleep(0.25)
     except KeyboardInterrupt:
-        pass
-    finally:
-        # Clean up processes
-        if backend_process:
-            backend_process.terminate()
-        if frontend_process:
-            frontend_process.terminate()
+        shutdown()
 
 if __name__ == "__main__":
     main()

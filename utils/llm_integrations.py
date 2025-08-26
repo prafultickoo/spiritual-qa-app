@@ -9,6 +9,11 @@ from typing import Dict, Any, Optional, List
 from dotenv import load_dotenv
 import openai
 from utils.document_retriever import retrieve_spiritual_context
+from utils.llm_timeout import (
+    call_chat_completion_with_async_timeout,
+    get_llm_timeout_default,
+)
+import uuid
 
 # Load environment variables
 load_dotenv()
@@ -246,14 +251,24 @@ Please provide a thoughtful, compassionate response that draws from this wisdom 
             
             api_model = model_mapping.get(model, "gpt-4o")
             
-            response = self.openai_client.chat.completions.create(
-                model=api_model,
-                messages=[
+            # Prepare params and call with centralized async timeout wrapper
+            params = {
+                "model": api_model,
+                "messages": [
                     {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": user_message}
+                    {"role": "user", "content": user_message},
                 ],
-                temperature=0.7,
-                max_tokens=1000
+                "temperature": 0.7,
+                "max_tokens": 1000,
+            }
+            timeout_seconds = get_llm_timeout_default()
+            request_id = f"spirit-resp-{uuid.uuid4().hex[:8]}"
+            response = await call_chat_completion_with_async_timeout(
+                client=self.openai_client,
+                params=params,
+                timeout_seconds=timeout_seconds,
+                request_id=request_id,
+                logger=logger,
             )
             
             return response.choices[0].message.content

@@ -1,0 +1,105 @@
+{
+  "success": true,
+  "timestamp": "2025-08-07 12:13:28",
+  "results": [
+    {
+      "test": "Health Check",
+      "status": "PASS",
+      "timestamp": "2025-08-07 12:12:23",
+      "details": {
+        "response_status": 200,
+        "api_status": "healthy",
+        "global_health": true,
+        "active_requests": 0
+      }
+    },
+    {
+      "test": "First Question",
+      "status": "PASS",
+      "timestamp": "2025-08-07 12:12:34",
+      "details": {
+        "response_status": 200,
+        "model": "gpt-4.1",
+        "status": "success",
+        "answer_preview": "Om!\n\nKarma Yoga is the path of doing your daily actions with a spirit of devotion and without being attached to the results. It means you do your work, your duties, and your responsibilities, but you "
+      }
+    },
+    {
+      "test": "Follow-up with History",
+      "status": "PASS",
+      "timestamp": "2025-08-07 12:12:37",
+      "details": {
+        "response_status": 200,
+        "model": "gpt-4.1",
+        "status": "success",
+        "answer_preview": "I couldn't find any relevant information to answer your question."
+      }
+    },
+    {
+      "test": "Additional Question #1",
+      "status": "PASS",
+      "timestamp": "2025-08-07 12:12:47",
+      "details": {
+        "response_status": 200,
+        "model": "gpt-4.1",
+        "status": "success",
+        "answer_preview": "Om!\n\nTattvabodha is a simple and clear guide that helps us understand the basics of spiritual knowledge. It is like a gentle introduction to the deeper teachings found in the ancient Indian scriptures"
+      }
+    },
+    {
+      "test": "Additional Question #2",
+      "status": "PASS",
+      "timestamp": "2025-08-07 12:12:58",
+      "details": {
+        "response_status": 200,
+        "model": "gpt-4.1",
+        "status": "success",
+        "answer_preview": "Om!\n\nThe meaning of life, as revealed in the wisdom of the scriptures, is not simply to chase after fleeting pleasures or to be lost in endless cycles of work and recreation. Life is a precious opport"
+      }
+    },
+    {
+      "test": "Additional Question #3",
+      "status": "PASS",
+      "timestamp": "2025-08-07 12:13:09",
+      "details": {
+        "response_status": 200,
+        "model": "gpt-4.1",
+        "status": "success",
+        "answer_preview": "Om!\n\nChapter 2 of the Bhagavad Gita is where the true teaching begins. Here, Arjuna is standing on the battlefield, filled with confusion and sadness. His heart is heavy, his eyes are full of tears, a"
+      }
+    },
+    {
+      "test": "Additional Question #4",
+      "status": "PASS",
+      "timestamp": "2025-08-07 12:13:18",
+      "details": {
+        "response_status": 200,
+        "model": "gpt-4.1",
+        "status": "success",
+        "answer_preview": "Om!\n\nMeditation, in the wisdom of the ancient texts, is the art of bringing the mind to serenity and single-pointed focus. It is not about emptying the mind into nothingness, but rather, gently guidin"
+      }
+    },
+    {
+      "test": "Second Follow-up",
+      "status": "PASS",
+      "timestamp": "2025-08-07 12:13:28",
+      "details": {
+        "response_status": 200,
+        "model": "gpt-4.1",
+        "status": "success",
+        "answer_preview": "I don't find specific guidance on this in our spiritual texts. Perhaps this question invites us to reflect on what truly nourishes our soul."
+      }
+    },
+    {
+      "test": "Health Check",
+      "status": "PASS",
+      "timestamp": "2025-08-07 12:13:28",
+      "details": {
+        "response_status": 200,
+        "api_status": "healthy",
+        "global_health": true,
+        "active_requests": 0
+      }
+    }
+  ]
+}

@@ -50,7 +50,7 @@ app.add_middleware(
 class SpiritualQuery(BaseModel):
     """Request model for spiritual questions."""
     question: str = Field(..., description="The spiritual question to ask", min_length=1, max_length=500)
-    model: str = Field(default="gpt-4.1", description="LLM model to use for response")
+    model: str = Field(default="gpt-5", description="LLM model to use for response")
     max_context_docs: int = Field(default=5, description="Maximum number of context documents to retrieve")
 
 class SpiritualResponse(BaseModel):

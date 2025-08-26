@@ -147,19 +147,20 @@ class QueryProcessor:
                     "chunks": []
                 }
             
-            # Get relevant documents
-            relevant_docs = self.vector_store.similarity_search(
+            # Get relevant documents with scores
+            docs_with_scores = self.vector_store.similarity_search_with_score(
                 query_text, 
                 k=k, 
                 filter=filter_metadata
             )
             
-            # Format the results
+            # Format the results with relevance scores
             formatted_chunks = []
-            for doc in relevant_docs:
+            for doc, score in docs_with_scores:
                 chunk = {
                     "content": doc.page_content,
-                    "metadata": doc.metadata
+                    "metadata": doc.metadata,
+                    "relevance_score": float(score)
                 }
                 formatted_chunks.append(chunk)
             
@@ -215,14 +216,28 @@ class QueryProcessor:
                 filter=filter_metadata
             )
             
-            # Format the results
+            # Calculate relevance scores for MMR results
+            # Since MMR doesn't return scores, we'll compute them separately
             formatted_chunks = []
-            for doc in relevant_docs:
-                chunk = {
-                    "content": doc.page_content,
-                    "metadata": doc.metadata
-                }
-                formatted_chunks.append(chunk)
+            if relevant_docs:
+                # Get embeddings for query and documents
+                query_embedding = self.embedding_model.embed_query(query_text)
+                
+                for doc in relevant_docs:
+                    # Calculate cosine similarity as relevance score
+                    doc_embedding = self.embedding_model.embed_documents([doc.page_content])[0]
+                    
+                    # Compute cosine similarity
+                    import numpy as np
+                    score = float(np.dot(query_embedding, doc_embedding) / 
+                                (np.linalg.norm(query_embedding) * np.linalg.norm(doc_embedding)))
+                    
+                    chunk = {
+                        "content": doc.page_content,
+                        "metadata": doc.metadata,
+                        "relevance_score": score
+                    }
+                    formatted_chunks.append(chunk)
             
             return {
                 "query": query_text,

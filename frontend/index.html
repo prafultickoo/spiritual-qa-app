@@ -59,18 +59,6 @@
         <div class="chat-container">
             <!-- Chat Messages -->
             <div class="chat-messages" id="chat-messages">
-                <!-- Test Sanskrit Rendering -->
-                <div class="message bot-message">
-                    <strong>🕉️ Sanskrit Rendering Test:</strong><br>
-                    <div class="sanskrit-text">
-                        <p><strong>Bhagavad Gita (2.47):</strong></p>
-                        <p>कर्मण्येवाधिकारस्ते मा फलेषु कदाचन।<br>
-                        मा कर्मफलहेतुर्भूर्मा ते सङ्गोऽस्त्वकर्मणि॥</p>
-                        <p><em>karmaṇyevādhikāras te mā phaleṣu kadācana<br>
-                        mā karmaphalaheturbhūr mā te saṅgo'stvakarmaṇi</em></p>
-                        <p><strong>Translation:</strong> You have a right to perform your prescribed duty, but not to the fruits of action. Never consider yourself the cause of the results of your activities, and never be attached to not doing your duty.</p>
-                    </div>
-                </div>
                 <!-- Messages will appear here dynamically -->
             </div>
             
@@ -104,7 +92,8 @@
                     <div class="setting-group numbered-section">
                         <label><span class="section-number">1.</span> AI Model</label>
                         <select id="model-select" class="setting-select">
-                            <option value="gpt-4.1">GPT-4.1</option>
+                            <option value="gpt-4.1" selected>GPT-4.1</option>
+                            <option value="gpt-5" disabled>GPT-5 ⭐ (Disabled)</option>
                             <option value="gpt-4o">GPT-4o</option>
                             <option value="o3-mini">o3 mini (Reasoning) 🧠</option>
                             <option value="claude-3-opus">Claude 3 Opus</option>

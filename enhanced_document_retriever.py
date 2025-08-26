@@ -20,6 +20,11 @@ from document_retriever import DocumentRetriever
 # Import our dual-source utilities
 from utils.dual_source_retriever import DualSourceRetriever, RetrievalResult
 
+# Import context enhancement pipeline
+from utils.conversation_context import ConversationContextProcessor
+from utils.semantic_analyzer import SemanticAnalyzer
+from utils.query_classifier import LLMQueryClassifier
+
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
@@ -50,7 +55,8 @@ class EnhancedDocumentRetriever(DocumentRetriever):
                  vector_store_dir: str,
                  embedding_model: str = "openai",
                  collection_name: str = "spiritual_texts",
-                 enable_dual_source: bool = True):
+                 enable_dual_source: bool = True,
+                 enable_context_enhancement: bool = False):
         """
         Initialize enhanced document retriever.
         
@@ -59,12 +65,30 @@ class EnhancedDocumentRetriever(DocumentRetriever):
             embedding_model: Name of embedding model to use ('openai' or 'huggingface')
             collection_name: Name of the primary ChromaDB collection (for backward compatibility)
             enable_dual_source: Whether to enable dual-source functionality
+            enable_context_enhancement: Whether to enable context enhancement pipeline
         """
         # Initialize parent class (existing functionality)
         super().__init__(vector_store_dir, embedding_model, collection_name)
         
         self.enable_dual_source = enable_dual_source
         self.dual_source_retriever = None
+        
+        # Initialize context enhancement pipeline components
+        self.enable_context_enhancement = enable_context_enhancement
+        self.context_processor = None
+        self.semantic_analyzer = None
+        self.query_classifier = None
+        
+        if self.enable_context_enhancement:
+            try:
+                self.context_processor = ConversationContextProcessor()
+                self.semantic_analyzer = SemanticAnalyzer()
+                self.query_classifier = LLMQueryClassifier()
+                logger.info("Context enhancement pipeline initialized successfully")
+            except Exception as e:
+                logger.warning(f"Failed to initialize context enhancement: {str(e)}")
+                logger.warning("Context enhancement disabled")
+                self.enable_context_enhancement = False
         
         # Initialize dual-source retriever if enabled
         if self.enable_dual_source:
@@ -109,6 +133,10 @@ class EnhancedDocumentRetriever(DocumentRetriever):
                 'content': content,
                 'metadata': metadata
             }
+            
+            # Propagate relevance score if present in metadata
+            if 'relevance_score' in metadata:
+                chunk['relevance_score'] = metadata['relevance_score']
             
             # Add chunk_id if not present
             if 'chunk_id' not in chunk['metadata']:
@@ -235,6 +263,123 @@ class EnhancedDocumentRetriever(DocumentRetriever):
                 analysis['priority'] = 'explanations_first'
         
         return analysis
+    
+    def _process_context_enhancement(self, 
+                                    query: str, 
+                                    conversation_history: List[Dict],
+                                    llm_client: Optional[Any] = None,
+                                    model: str = "gpt-4o-mini") -> Dict[str, Any]:
+        """
+        Process query through the 3-stage context enhancement pipeline.
+        
+        Args:
+            query: User query
+            conversation_history: Previous conversation exchanges
+            llm_client: LLM client for Stage 3 classification (optional)
+            
+        Returns:
+            Dict with enhancement results and processed query
+        """
+        result = {
+            'original_query': query,
+            'processed_query': query,
+            'enhancement_applied': False,
+            'pipeline_stage': 0,
+            'action': 'direct_retrieval',
+            'needs_rag': True
+        }
+        
+        if not self.enable_context_enhancement:
+            logger.info("Context enhancement disabled, using original query")
+            return result
+        
+        try:
+            # Stage 1: Fast heuristic detection
+            stage1_result = self.context_processor.is_follow_up_query(query, conversation_history)
+            logger.info(f"Stage 1: Follow-up={stage1_result['is_follow_up']}, confidence={stage1_result['confidence']}")
+            
+            if not stage1_result['is_follow_up']:
+                result['pipeline_stage'] = 1
+                return result
+            
+            # Stage 2: Semantic analysis
+            stage2_result = self.semantic_analyzer.analyze_query_ambiguity(query, conversation_history)
+            logger.info(f"Stage 2: Ambiguous={stage2_result.get('is_ambiguous')}, needs_context={stage2_result.get('needs_context')}")
+            
+            if not stage2_result.get('needs_context', False):
+                result['pipeline_stage'] = 2
+                return result
+            
+            # Stage 3: LLM classification (only if we have an LLM client)
+            if llm_client is None:
+                logger.warning("No LLM client provided for Stage 3, using default enhancement")
+                # Default to information expansion if no LLM available
+                result['enhancement_applied'] = True
+                result['pipeline_stage'] = 2
+                result['action'] = 'enhance_and_retrieve'
+                
+                # Simple context enhancement: append last topic
+                if conversation_history:
+                    last_topic = self.context_processor.extract_last_topic(conversation_history)
+                    if last_topic:
+                        result['processed_query'] = f"{query} (in context of {last_topic})"
+                return result
+            
+            # Run Stage 3 classification
+            stage2_result['proceed_to_stage_3'] = True
+            stage3_result = self.query_classifier.process_stage3(
+                query, conversation_history, stage2_result, llm_client, model
+            )
+            
+            classification = stage3_result.get('stage3_classification', {})
+            logger.info(f"Stage 3: Intent={classification.get('intent')}, action={classification.get('action')}")
+            
+            result['pipeline_stage'] = 3
+            result['action'] = classification.get('action', 'enhance_and_retrieve')
+            result['needs_rag'] = classification.get('needs_rag', True)
+            result['intent'] = classification.get('intent')
+            result['explanation'] = classification.get('explanation')
+            
+            # Process based on action
+            if classification.get('action') == 'enhance_and_retrieve':
+                # Enhance query with context
+                if conversation_history:
+                    context_summary = self.query_classifier.summarize_conversation(conversation_history)
+                    last_topic = self.context_processor.extract_last_topic(conversation_history)
+                    
+                    # Create enhanced query
+                    enhanced_parts = [query]
+                    if last_topic:
+                        enhanced_parts.append(f"(regarding {last_topic})")
+                    if context_summary:
+                        enhanced_parts.append(f"[Context: {context_summary}]")
+                    
+                    result['processed_query'] = " ".join(enhanced_parts)
+                    result['enhancement_applied'] = True
+                    logger.info(f"Enhanced query: {result['processed_query']}")
+            
+            elif classification.get('action') == 'reformat_previous':
+                # This will be handled by the answer generator
+                result['needs_rag'] = False
+                result['enhancement_applied'] = False
+                result['context_action'] = 'reformat_previous'  # THE MISSING LINK!
+                logger.info("Action: Reformat previous answer (no RAG needed)")
+            
+            elif classification.get('action') == 'apply_perspective':
+                # Enhance query to apply new perspective
+                if conversation_history:
+                    last_topic = self.context_processor.extract_last_topic(conversation_history)
+                    result['processed_query'] = f"{query} (apply to {last_topic})" if last_topic else query
+                    result['enhancement_applied'] = True
+                result['needs_rag'] = False  # Will use previous answer as base
+            
+            return result
+            
+        except Exception as e:
+            logger.error(f"Error in context enhancement pipeline: {str(e)}")
+            logger.exception("Full traceback:")
+            # Fallback to original query
+            return result
     
     def retrieve_chunks(self, 
                        query: str, 
@@ -389,6 +534,94 @@ class EnhancedDocumentRetriever(DocumentRetriever):
             stats['error'] = str(e)
         
         return stats
+    
+    def retrieve_chunks_with_context(self,
+                                   query: str,
+                                   conversation_history: Optional[List[Dict]] = None,
+                                   k: int = 5,
+                                   use_mmr: bool = True,
+                                   diversity: float = 0.7,
+                                   filter_metadata: Optional[Dict[str, Any]] = None,
+                                   llm_client: Optional[Any] = None,
+                                   model: str = "gpt-4o-mini") -> Dict[str, Any]:
+        """
+        Retrieve chunks with context enhancement capabilities.
+        
+        This method adds context-aware query processing while maintaining
+        full compatibility with the base retrieve_chunks interface.
+        
+        Args:
+            query: User query text
+            conversation_history: Optional conversation history for context enhancement
+            k: Number of chunks to retrieve
+            use_mmr: Whether to use Maximum Marginal Relevance
+            diversity: MMR diversity parameter
+            filter_metadata: Optional metadata filter
+            llm_client: Optional LLM client for Stage 3 classification
+            model: LLM model to use for Stage 3 classification
+            
+        Returns:
+            Dict with retrieval results and context enhancement info
+        """
+        # Process through context enhancement pipeline if enabled
+        context_result = self._process_context_enhancement(
+            query, 
+            conversation_history or [],
+            llm_client,
+            model
+        )
+        
+        # Use the processed query for retrieval if enhancement was applied
+        retrieval_query = context_result['processed_query']
+        
+        # Only retrieve if the action requires RAG
+        if not context_result['needs_rag']:
+            logger.info(f"Action '{context_result['action']}' does not require RAG retrieval")
+            return {
+                'status': 'success',
+                'chunks': [],
+                'context_action': context_result['action'],  # TOP-LEVEL FIELD FOR ANSWER GENERATOR!
+                'query_info': {
+                    'original_query': query,
+                    'processed_query': retrieval_query,
+                    'context_enhanced': context_result['enhancement_applied'],
+                    'pipeline_stage': context_result['pipeline_stage'],
+                    'action': context_result['action'],
+                    'intent': context_result.get('intent'),
+                    'explanation': context_result.get('explanation')
+                },
+                'enhanced_queries_used': [retrieval_query],
+                'total_unique_chunks': 0,
+                'requires_special_handling': True
+            }
+        
+        # Perform regular retrieval with the (possibly enhanced) query
+        result = self.retrieve_chunks(
+            query=retrieval_query,
+            k=k,
+            use_mmr=use_mmr,
+            diversity=diversity,
+            filter_metadata=filter_metadata
+        )
+        
+        # Add context enhancement information to the result
+        if 'query_info' not in result:
+            result['query_info'] = {}
+        
+        result['query_info'].update({
+            'original_query': query,
+            'processed_query': retrieval_query,
+            'context_enhanced': context_result['enhancement_applied'],
+            'pipeline_stage': context_result['pipeline_stage'],
+            'action': context_result['action'],
+            'intent': context_result.get('intent'),
+            'explanation': context_result.get('explanation')
+        })
+        
+        # Add top-level context_action field for answer generator
+        result['context_action'] = context_result['action']
+        
+        return result
 
 
 def create_enhanced_retriever(vector_store_dir: str = "./vector_store",

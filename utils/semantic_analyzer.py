@@ -118,6 +118,20 @@ class SemanticAnalyzer:
             result['confidence'] = 0.6
             result['analysis']['ambiguous_terms'] = ambiguous_found
         
+        # Check 6: Context-dependent action queries
+        context_dependent_actions = [
+            'summarize', 'summary', 'summarise', 'main points', 'key points',
+            'outline', 'overview', 'recap', 'review', 'list the points'
+        ]
+        
+        for action in context_dependent_actions:
+            if action in query_lower:
+                result['is_complete'] = False
+                result['missing_elements'].append('context_dependent_action')
+                result['confidence'] = 0.9
+                result['analysis']['context_dependent_action'] = action
+                break
+        
         # If query has complete phrases, boost completeness
         if any(phrase in query_lower for phrase in self.completeness_markers['complete_phrases']):
             result['is_complete'] = True
@@ -267,7 +281,8 @@ class SemanticAnalyzer:
         if not completeness['is_complete']:
             # Query is incomplete
             if 'missing_object' in completeness['missing_elements'] or \
-               'dangling_pronouns' in completeness['missing_elements']:
+               'dangling_pronouns' in completeness['missing_elements'] or \
+               'context_dependent_action' in completeness['missing_elements']:
                 result['is_ambiguous'] = True
                 result['needs_context'] = True
                 result['confidence'] = max(result['confidence'], completeness['confidence'])

@@ -196,11 +196,17 @@ class DualSourceRetriever:
             elif chapter:
                 search_query = f"chapter {chapter} {query}"
             
-            # Search verses collection
-            results = self.verses_store.similarity_search(
+            # Search verses collection with relevance scores
+            results_with_scores = self.verses_store.similarity_search_with_relevance_scores(
                 search_query, 
                 k=k
             )
+            
+            # Extract documents and add scores to metadata
+            results = []
+            for doc, score in results_with_scores:
+                doc.metadata['relevance_score'] = float(score)
+                results.append(doc)
             
             # Filter by metadata if specified
             if chapter or verse:
@@ -264,11 +270,17 @@ class DualSourceRetriever:
             if chapter:
                 search_query = f"chapter {chapter} {query}"
             
-            # Search explanations collection
-            results = self.explanations_store.similarity_search(
+            # Search explanations collection with relevance scores
+            results_with_scores = self.explanations_store.similarity_search_with_relevance_scores(
                 search_query,
                 k=k
             )
+            
+            # Extract documents and add scores to metadata
+            results = []
+            for doc, score in results_with_scores:
+                doc.metadata['relevance_score'] = float(score)
+                results.append(doc)
             
             logger.info(f"Retrieved {len(results)} explanations for: {search_query}")
             return results
